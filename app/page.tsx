@@ -86,7 +86,7 @@ export default function Home() {
               boxShadow: loading ? '0 0 30px rgba(244, 114, 182, 0.4)' : 'none'
             }}
           >
-            {loading ? 'RENDERING AUDIO...' : 'GENERATE BEAT'}
+            {loading ? 'RENDERING AUDIO...' : 'COOK UP'}
           </button>
           
         </div>
