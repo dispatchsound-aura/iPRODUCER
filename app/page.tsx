@@ -8,18 +8,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Create a cool "Spinning" state when generating
-  useEffect(() => {
-    const record = document.querySelector('.spinning-record');
-    if (record) {
-      if (loading) {
-        record.classList.remove('paused');
-      } else {
-        record.classList.add('paused');
-      }
-    }
-  }, [loading]);
-
   const handleGenerate = async () => {
     if (!prompt) return;
     setLoading(true);
@@ -102,6 +90,11 @@ export default function Home() {
           </button>
           
         </div>
+      </div>
+
+      {/* Sonauto API Compliance Watermark */}
+      <div style={{ marginTop: '2rem', opacity: 0.4, fontSize: '0.75rem', letterSpacing: '1px', color: 'var(--text-secondary)' }}>
+        POWERED BY SONAUTO
       </div>
     </main>
   );

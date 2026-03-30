@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, crates: any[], view?: 'grid' | 'list' }) {
   const [stemStatus, setStemStatus] = useState(gen.stemStatus);
@@ -11,6 +11,29 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
   const [vibe, setVibe] = useState(gen.vibe || '');
   const [keyProperty, setKeyProperty] = useState(gen.key || '');
   const [crateId, setCrateId] = useState(gen.crateId || '');
+  const [status, setStatus] = useState(gen.status);
+  const [beatUrl, setBeatUrl] = useState(gen.beatUrl);
+
+  // Poll Sonauto API if generation is pending
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (status === 'pending') {
+      interval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/status/${gen.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'SUCCESS' || data.status === 'ready') {
+              setStatus('ready');
+              // Optionally do a hard refresh to get exactly what Prisma saved, or just assume it is done
+              window.location.reload(); 
+            }
+          }
+        } catch (e) {}
+      }, 5000);
+    }
+    return () => clearInterval(interval);
+  }, [status, gen.id]);
 
   const handleSplit = async () => {
     setSplitting(true);
