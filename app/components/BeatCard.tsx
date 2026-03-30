@@ -20,20 +20,24 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
     if (status === 'pending') {
       interval = setInterval(async () => {
         try {
-          const res = await fetch(`/api/status/${gen.id}`);
+          const query = gen.id === 'ephemeral' ? `?taskId=${gen.taskId}` : '';
+          const res = await fetch(`/api/status/${gen.id}${query}`);
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'SUCCESS' || data.status === 'ready') {
               setStatus('ready');
-              // Optionally do a hard refresh to get exactly what Prisma saved, or just assume it is done
-              window.location.reload(); 
+              if (data.beatUrl) setBeatUrl(data.beatUrl);
+              // Only reload if hitting the permanent database
+              if (gen.id !== 'ephemeral') {
+                 window.location.reload(); 
+              }
             }
           }
         } catch (e) {}
       }, 5000);
     }
     return () => clearInterval(interval);
-  }, [status, gen.id]);
+  }, [status, gen.id, gen.taskId]);
 
   const handleSplit = async () => {
     setSplitting(true);
@@ -121,23 +125,35 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
              <div style={{ width: '8px', height: '8px', background: 'var(--accent-green)', borderRadius: '50%' }}></div>
              <span style={{ fontSize: '0.75rem', color: '#fff', fontWeight: 500 }}>MASTER RENDER</span>
           </div>
-          <audio controls src={`/api/audio/${gen.id}`} style={{ width: '100%', height: '32px', marginBottom: '0.5rem', filter: 'invert(0.9) hue-rotate(180deg) grayscale(1)' }} />
+          <audio controls src={gen.id === 'ephemeral' ? beatUrl : `/api/audio/${gen.id}`} style={{ width: '100%', height: '32px', marginBottom: '0.5rem', filter: 'invert(0.9) hue-rotate(180deg) grayscale(1)' }} />
 
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <a href={`/api/audio/${gen.id}`} download={`Typebeat_${gen.id}_Master.mp3`} className="button" style={{ flex: 1, textAlign: 'center' }}>
-              MP3
-            </a>
-            {stemStatus === 'none' && (
-              <button onClick={handleSplit} disabled={splitting} className="button highlight" style={{ flex: 2 }}>
-                {splitting ? 'Extracting...' : 'Isolate Stems'}
+          {gen.id === 'ephemeral' ? (
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <button 
+                onClick={() => alert("Registration required to save & download beats. Please implement your custom Auth Provider page!")} 
+                className="button highlight" 
+                style={{ flex: 1, textAlign: 'center', background: 'var(--accent-purple)' }}
+              >
+                Sign Up To Save & Download Stems
               </button>
-            )}
-            {stemStatus === 'splitting' && (
-              <button disabled className="button" style={{ flex: 2, background: 'var(--accent-orange)' }}>
-                Processing... 
-              </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <a href={`/api/audio/${gen.id}`} download={`Typebeat_${gen.id}_Master.mp3`} className="button" style={{ flex: 1, textAlign: 'center' }}>
+                MP3
+              </a>
+              {stemStatus === 'none' && (
+                <button onClick={handleSplit} disabled={splitting} className="button highlight" style={{ flex: 2 }}>
+                  {splitting ? 'Extracting...' : 'Isolate Stems'}
+                </button>
+              )}
+              {stemStatus === 'splitting' && (
+                <button disabled className="button" style={{ flex: 2, background: 'var(--accent-orange)' }}>
+                  Processing... 
+                </button>
+              )}
+            </div>
+          )}
 
           {stemStatus === 'ready' && (
              <div style={{ background: 'var(--control-bg)', padding: '0.5rem', borderRadius: '2px', border: '1px solid var(--border-color)' }}>

@@ -5,6 +5,22 @@ const prisma = new PrismaClient();
 
 export async function GET(req: Request, { params }: { params: { generationId: string } }) {
   try {
+    // EPHEMERAL FUNNEL BYPASS: Query Sonauto without touching the Database
+    if (params.generationId === 'ephemeral') {
+       const { searchParams } = new URL(req.url);
+       const taskId = searchParams.get('taskId');
+       if (!taskId) return NextResponse.json({ error: 'Missing taskId' }, { status: 400 });
+
+       const res = await fetch(`https://api.sonauto.ai/v1/generations/${taskId}`, {
+         headers: { 'Authorization': `Bearer ${process.env.SONAUTO_API_KEY}` }
+       });
+       if (!res.ok) return NextResponse.json({ error: 'Failed to proxy status' }, { status: 500 });
+
+       const data = await res.json();
+       const finalUrl = (data.status === 'SUCCESS' && data.song_paths) ? data.song_paths[0] : undefined;
+       return NextResponse.json({ status: data.status, beatUrl: finalUrl });
+    }
+
     const generation = await prisma.generation.findUnique({
       where: { id: params.generationId },
     });

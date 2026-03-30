@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export const dynamic = 'force-dynamic';
 
-export default async function Dashboard({ searchParams }: { searchParams: { crateId?: string } }) {
+export default async function Dashboard({ searchParams }: { searchParams: { crateId?: string, ephemeralTaskId?: string, prompt?: string } }) {
   const pendingGenerations = await prisma.generation.findMany({ 
     where: { NOT: { status: { in: ['ready', 'SUCCESS', 'FAILURE', 'failed'] } } } 
   });
@@ -50,6 +50,24 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
     where: targetCrateId ? { crateId: targetCrateId } : undefined,
     orderBy: { createdAt: 'desc' }
   });
+
+  // Inject Ephemeral Track for Guest Users
+  if (searchParams?.ephemeralTaskId) {
+    generations.unshift({
+      id: 'ephemeral',
+      taskId: searchParams.ephemeralTaskId,
+      prompt: searchParams.prompt ? decodeURIComponent(searchParams.prompt) : 'Guest Beat',
+      status: 'pending',
+      beatUrl: null,
+      title: 'Sign Up to Save & Download',
+      crateId: null,
+      bpm: null,
+      userId: null,
+      folderId: null,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } as any);
+  }
 
   const crates = await prisma.crate.findMany({
     orderBy: { createdAt: 'desc' }

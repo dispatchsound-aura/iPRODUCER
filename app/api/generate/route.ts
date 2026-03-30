@@ -14,12 +14,14 @@ export async function POST(req: Request) {
     const useV2 = !!bpm;
     const url = useV2 ? 'https://api.sonauto.ai/v1/generations/v2' : 'https://api.sonauto.ai/v1/generations/v3';
 
-    // Inject hardcore instrumental modifiers so Sonauto never outputs vocals
-    const finalPrompt = `${prompt}, No words, No Lyrics, Instrumental`;
+    // INJECT: Hardcore Instrumental Mode
+    // Violently engineer the prompt to eradicate latent vocal capabilities
+    const cleanPrompt = prompt.replace(/(singer|rapper|vocals|voice|singing|lyric|words)/gi, '');
+    const finalPrompt = `[Instrumental Only, Strictly No Vocals, Pure Beat, Master Track] ${cleanPrompt}`;
 
     const bodyObj: any = {
       prompt: finalPrompt,
-      instrumental: true, // Typebeat generator
+      instrumental: true, // Typebeat generator flag
       num_songs: 1,
     };
     if (useV2 && bpm) bodyObj.bpm = Number(bpm);
@@ -36,16 +38,32 @@ export async function POST(req: Request) {
 
     if (!sonautoRes.ok) {
       const errorText = await sonautoRes.text();
+      console.error("Sonauto error:", errorText);
       throw new Error(`Sonauto API failed: ${errorText}`);
     }
 
     const taskData = await sonautoRes.json();
-    const taskId = taskData.task_id;
-    
-    // Save initial Generation object to DB waiting for async polling
+    const taskId = taskData.task_id || taskData.id;
+
+    // EPHEMERAL FUNNEL BYPASS: 
+    // If there is NO userId, instantly return without touching the database!
+    if (!userId) {
+      return NextResponse.json({ 
+        success: true, 
+        isEphemeral: true,
+        generation: { 
+           id: 'ephemeral', 
+           taskId, 
+           prompt: finalPrompt, 
+           status: 'pending' 
+        } 
+      });
+    }
+
+    // Save initial Generation object to DB waiting for async polling (Registered users only)
     const generation = await prisma.generation.create({
       data: {
-        prompt,
+        prompt: finalPrompt,
         taskId,
         bpm: bpm ? Number(bpm) : undefined,
         userId: userId || undefined,
@@ -54,7 +72,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ success: true, generation });
+    return NextResponse.json({ success: true, isEphemeral: false, generation });
   } catch (error: any) {
     console.error('Generation Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

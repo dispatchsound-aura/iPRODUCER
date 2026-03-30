@@ -17,10 +17,15 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt, bpm: bpm ? parseInt(bpm, 10) : undefined }),
       });
-      if (res.ok) {
-        router.push('/dashboard');
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (data.isEphemeral) {
+           router.push(`/dashboard?ephemeralTaskId=${data.generation.taskId}&prompt=${encodeURIComponent(data.generation.prompt)}`);
+        } else {
+           router.push('/dashboard');
+        }
       } else {
-        alert('Generation failed');
+        alert('Generation failed: ' + (data.error || 'Unknown error'));
       }
     } catch (e) {
       console.error(e);
