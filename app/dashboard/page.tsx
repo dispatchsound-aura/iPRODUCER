@@ -60,6 +60,7 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h2 style={{ fontSize: '2.5rem' }}>Your Studio</h2>
         <div style={{ display: 'flex', gap: '1rem' }}>
+          <a href="/dashboard/admin" className="button" style={{ textDecoration: 'none', background: 'transparent', border: '1px solid var(--accent-cyan)', color: 'var(--accent-cyan)' }}>Admin Console</a>
           <a href="/" className="button" style={{ textDecoration: 'none', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>+ New Beat</a>
           <a href="/dashboard" className="button" style={{ textDecoration: 'none' }}>Refresh Status</a>
         </div>
