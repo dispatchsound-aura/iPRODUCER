@@ -62,7 +62,6 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
       <div style={{ padding: '12px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
         <h2 style={{ fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-secondary)' }}>Browser & Library</h2>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <a href="/dashboard/admin" className="button highlight" style={{ fontSize: '0.75rem' }}>⚙ Admin Console</a>
           <a href="/dashboard" className="button" style={{ fontSize: '0.75rem' }}>⟳ Refresh Library</a>
         </div>
       </div>

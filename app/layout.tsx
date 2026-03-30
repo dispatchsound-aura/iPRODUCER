@@ -32,7 +32,7 @@ export default function RootLayout({
         }}>
           {/* Left: Spinning Record & Branding */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div className="spinning-record paused" style={{ fontSize: '1.8rem' }}>
+            <div className="spinning-record" style={{ fontSize: '1.8rem' }}>
               💿
             </div>
             <a href="/" style={{ fontWeight: 800, letterSpacing: '2px', fontSize: '1.4rem', color: '#FFF', display: 'flex', alignItems: 'center', gap: '4px', textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
