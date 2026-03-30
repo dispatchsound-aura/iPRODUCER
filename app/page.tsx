@@ -65,7 +65,7 @@ export default function Home() {
           {/* Plugin Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #111', paddingBottom: '1.5rem', marginBottom: '1rem' }}>
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, letterSpacing: '-1px', color: '#fff', margin: 0 }}>TYPEBEAT ENGINE</h1>
+              <h1 style={{ fontSize: '1.8rem', fontWeight: 800, letterSpacing: '-1px', color: '#fff', margin: 0 }}>iPRODUCER ENGINE</h1>
               <span style={{ color: 'var(--accent-color)', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 600 }}>Instrumental Generator</span>
             </div>
             

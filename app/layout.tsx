@@ -30,11 +30,11 @@ export default function RootLayout({
         }}>
           {/* Left: Spinning Record & Branding */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div className="spinning-record" style={{ fontSize: '1.5rem', filter: 'drop-shadow(0 0 5px rgba(255,140,0,0.5))' }}>
+            <div className="spinning-record" style={{ fontSize: '1.5rem', filter: 'drop-shadow(0 0 12px var(--accent-color)) drop-shadow(0 0 25px var(--accent-color))' }}>
               💿
             </div>
-            <a href="/" style={{ fontWeight: 700, letterSpacing: '1px', fontSize: '1.1rem', color: '#ECEFF4', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              TYPEBEAT <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: '0.9rem' }}>STUDIO</span>
+            <a href="/" style={{ fontWeight: 800, letterSpacing: '1px', fontSize: '1.2rem', color: '#ECEFF4', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              iPRODUCER
             </a>
           </div>
 
