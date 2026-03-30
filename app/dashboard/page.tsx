@@ -58,44 +58,43 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
   return (
     <main style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}>
       
-      {/* DAW Toolbar Secondary */}
-      <div style={{ background: '#22252A', padding: '12px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #111' }}>
-        <h2 style={{ fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px', color: '#8E949F' }}>Browser & Library</h2>
+        {/* DAW Toolbar Secondary */}
+      <div style={{ padding: '12px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--glass-border)' }}>
+        <h2 style={{ fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--text-secondary)' }}>Browser & Library</h2>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <a href="/dashboard/admin" className="button" style={{ background: 'transparent', border: '1px solid var(--accent-orange)', color: 'var(--accent-orange)', fontSize: '0.75rem' }}>⚙ Admin Console</a>
-          <a href="/dashboard" className="button" style={{ fontSize: '0.75rem', background: '#2A2D35' }}>⟳ Refresh Library</a>
+          <a href="/dashboard/admin" className="button highlight" style={{ fontSize: '0.75rem' }}>⚙ Admin Console</a>
+          <a href="/dashboard" className="button" style={{ fontSize: '0.75rem' }}>⟳ Refresh Library</a>
         </div>
       </div>
       
       {/* Workspace Panel Split */}
-      <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', flex: 1, height: 'calc(100vh - 110px)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', flex: 1, height: 'calc(100vh - 120px)' }}>
         
         {/* Left Sidebar (Media Browser) */}
-        <aside style={{ background: '#1C1E23', borderRight: '1px solid #111', padding: '1rem', overflowY: 'auto' }}>
-          <h3 style={{ marginBottom: '0.5rem', color: '#5C6067', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Smart Folders</h3>
+        <aside style={{ borderRight: '1px solid var(--glass-border)', padding: '2rem 1rem', overflowY: 'auto', background: 'var(--glass-bg)' }}>
+          <h3 style={{ marginBottom: '1rem', color: 'var(--text-secondary)', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Smart Folders</h3>
           <ul style={{ listStyle: 'none', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-            <li style={{ padding: '8px 12px', background: !targetCrateId ? 'rgba(56, 189, 248, 0.1)' : 'transparent', borderRadius: '4px', borderLeft: !targetCrateId ? '3px solid var(--accent-color)' : '3px solid transparent' }}>
+            <li style={{ padding: '8px 12px', background: !targetCrateId ? 'rgba(56, 189, 248, 0.1)' : 'transparent', borderRadius: '8px', borderLeft: !targetCrateId ? '3px solid var(--accent-blue)' : '3px solid transparent' }}>
               <a href="/dashboard" style={{ color: !targetCrateId ? '#fff' : 'inherit', fontSize: '0.9rem', display: 'block' }}>All Outputs</a>
             </li>
           </ul>
 
-          <h3 style={{ marginBottom: '0.5rem', color: '#5C6067', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Crates (Playlists)</h3>
-          <ul style={{ listStyle: 'none', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+          <h3 style={{ marginBottom: '1rem', color: 'var(--text-secondary)', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Crates (Playlists)</h3>
+          <ul style={{ listStyle: 'none', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             {crates.map(c => (
-              <li key={c.id} style={{ marginBottom: '0.8rem' }}>
-                <a href={`/dashboard?crateId=${c.id}`} style={{ color: targetCrateId === c.id ? 'white' : 'inherit', fontWeight: targetCrateId === c.id ? '600' : '400' }}>
-                  💿 {c.name}
+              <li key={c.id} style={{ marginBottom: '0.5rem', padding: '8px 12px', borderRadius: '8px', background: targetCrateId === c.id ? 'rgba(192, 132, 252, 0.1)' : 'transparent', borderLeft: targetCrateId === c.id ? '3px solid var(--accent-purple)' : '3px solid transparent' }}>
+                <a href={`/dashboard?crateId=${c.id}`} style={{ color: targetCrateId === c.id ? 'white' : 'inherit', fontWeight: targetCrateId === c.id ? '600' : '400', fontSize: '0.9rem' }}>
+                  {c.name}
                 </a>
               </li>
             ))}
-            {crates.length === 0 && <li style={{ opacity: 0.5, fontSize: '0.85rem' }}>No crates yet.</li>}
           </ul>
           
           <CreateCrateButton />
         </aside>
 
-        <section style={{ padding: '2rem', overflowY: 'auto', background: '#17181A' }}>
-          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <section style={{ padding: '3rem', overflowY: 'auto' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }} className="glass-panel">
             <BeatContainer generations={generations} crates={crates} />
           </div>
         </section>

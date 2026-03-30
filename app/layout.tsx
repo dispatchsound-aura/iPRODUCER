@@ -14,50 +14,42 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* Global DAW Transport Bar */}
+        {/* Floating Glass Navigation */}
         <header style={{ 
-          height: '60px', 
-          background: 'var(--transport-bg)', 
-          borderBottom: '1px solid black',
+          height: '70px', 
+          background: 'rgba(5, 5, 10, 0.4)', 
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between',
-          padding: '0 20px',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+          padding: '0 40px',
           position: 'fixed',
           top: 0, left: 0, right: 0,
-          zIndex: 1000
+          zIndex: 1000,
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
         }}>
           {/* Left: Spinning Record & Branding */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div className="spinning-record" style={{ fontSize: '1.5rem', filter: 'drop-shadow(0 0 12px var(--accent-color)) drop-shadow(0 0 25px var(--accent-color))' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div className="spinning-record paused" style={{ fontSize: '1.8rem' }}>
               💿
             </div>
-            <a href="/" style={{ fontWeight: 800, letterSpacing: '1px', fontSize: '1.2rem', color: '#ECEFF4', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <a href="/" style={{ fontWeight: 800, letterSpacing: '2px', fontSize: '1.4rem', color: '#FFF', display: 'flex', alignItems: 'center', gap: '4px', textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
               iPRODUCER
             </a>
           </div>
 
-          {/* Center: LCD Display */}
-          <div style={{ display: 'none' }} className="lcd-container">
-            {/* We use media queries dynamically, but inline is fine for this robust layout */}
-          </div>
-          <div className="lcd-display" style={{ width: '300px', height: '40px', fontSize: '0.85rem' }}>
-             <span style={{ opacity: 0.5, marginRight: '8px' }}>P R O J E C T</span>
-             <span> 0 0 : 0 0 : 0 0 </span>
-             <span style={{ opacity: 0.5, marginLeft: '8px' }}> 1 2 0 BPM</span>
-          </div>
-
           {/* Right: Quick Controls */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <a href="/" className="button" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>Studio</a>
-            <a href="/dashboard" className="button" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>Library</a>
-            <a href="/signup" className="button highlight" style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '20px' }}>Sign Up</a>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <a href="/" className="button" style={{ padding: '8px 16px', fontSize: '0.9rem', border: 'none', background: 'transparent' }}>Studio</a>
+            <a href="/dashboard" className="button" style={{ padding: '8px 16px', fontSize: '0.9rem', border: 'none', background: 'transparent' }}>Library</a>
+            <a href="/signup" className="button highlight">Get Access</a>
           </div>
         </header>
 
         {/* Main Workspace Area */}
-        <div style={{ marginTop: '60px', minHeight: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ marginTop: '70px', minHeight: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column' }}>
           {children}
         </div>
       </body>
