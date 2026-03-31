@@ -48,7 +48,7 @@ export default async function RootLayout({
             {session ? (
               <>
                 <a href="/dashboard" className="button" style={{ padding: '8px 16px', fontSize: '0.9rem', border: 'none', background: 'transparent' }}>Catalog</a>
-                <a href="/dashboard" className="button highlight">Studio Profile</a>
+                <a href="/profile" className="button highlight">Account Settings</a>
               </>
             ) : (
               <>

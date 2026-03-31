@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         generation: { 
            id: 'ephemeral', 
            taskId, 
-           prompt: finalPrompt, 
+           prompt: prompt, 
            status: 'pending' 
         } 
       });
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     // Save initial Generation object to DB waiting for async polling (Registered users only)
     const generation = await prisma.generation.create({
       data: {
-        prompt: finalPrompt,
+        prompt: prompt,
         taskId,
         bpm: bpm ? Number(bpm) : undefined,
         userId: userId || undefined,

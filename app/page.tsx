@@ -81,35 +81,6 @@ export default function Home() {
               onChange={(e) => setPrompt(e.target.value)}
               style={{ resize: 'none', fontSize: 'clamp(1rem, 3.5vw, 1.2rem)', padding: 'clamp(1rem, 4vw, 1.5rem)', lineHeight: '1.6', width: '100%' }}
             />
-            
-            {/* Recent Prompts List */}
-            {recentPrompts.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '1rem' }}>
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', padding: '4px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Recent:</span>
-                {recentPrompts.map((p, idx) => (
-                  <button 
-                    key={idx} 
-                    onClick={() => setPrompt(p)}
-                    style={{ 
-                      background: 'rgba(255,255,255,0.05)', 
-                      border: '1px solid rgba(255,255,255,0.1)', 
-                      color: '#AAA', 
-                      borderRadius: '12px', 
-                      padding: '4px 12px', 
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      maxWidth: '120px'
-                    }}
-                    title={p}
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* Musical Parameters */}
@@ -160,10 +131,46 @@ export default function Home() {
             {loading ? 'RENDERING AUDIO...' : 'COOK UP'}
           </button>
           
+          <div style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+            Due to high studio demand, please allow up to 60 seconds for the engine to cook your beat.
+          </div>
+          
         </div>
       </div>
 
-      {/* Sonauto API Compliance Watermark */}
+      {/* Past Prompts Section (Outside Generator Card) */}
+      {recentPrompts.length > 0 && (
+        <div style={{ width: '100%', marginTop: '3rem' }}>
+          <h3 style={{ fontSize: '1.2rem', color: 'white', fontWeight: 600, marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
+            Your Past Prompts
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {recentPrompts.map((p, idx) => (
+              <div 
+                key={idx} 
+                onClick={() => {
+                   setPrompt(p);
+                   window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="glass-panel"
+                style={{ 
+                  padding: '1rem', 
+                  borderRadius: '12px', 
+                  cursor: 'pointer',
+                  fontSize: '0.95rem',
+                  color: 'rgba(255,255,255,0.8)',
+                  transition: 'all 0.2s ease',
+                  border: '1px solid rgba(255,255,255,0.05)'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                onMouseOut={(e) => e.currentTarget.style.background = 'rgba(10,10,15,0.6)'}
+              >
+                {p}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <div style={{ marginTop: '2rem', opacity: 0.4, fontSize: '0.75rem', letterSpacing: '1px', color: 'var(--text-secondary)' }}>
         POWERED BY SONAUTO
       </div>
