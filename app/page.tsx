@@ -75,7 +75,7 @@ export default function Home() {
             textShadow: '0 10px 40px rgba(0,0,0,0.5)', 
             lineHeight: 1.1 
         }}>
-          Create the Infinite.
+          Design Your Signature Sound.
         </h1>
         <p style={{ 
             color: 'var(--text-secondary)', 
@@ -85,23 +85,21 @@ export default function Home() {
             maxWidth: '800px',
             margin: '0 auto 1.5rem auto'
         }}>
-          Artist to create, find, craft, and mold their own sound with production they own. Royalty-free beats with packaged stems and MIDI downloads so you're ready to hit the studio like a professional.
-        </p>
-        <p style={{ 
-            color: 'var(--text-secondary)', 
-            fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', 
-            fontWeight: 300, 
-            lineHeight: 1.6,
-            maxWidth: '700px',
-            margin: '0 auto'
-        }}>
-          <span style={{ color: 'var(--accent-purple)', fontWeight: 600 }}>With native Stem Separation:</span> Producers can generate their own samples—no more digging, just describe it.
+          Instantly manifest industry-grade, royalty-free instrumentals. Extract studio-ready vocal stems and exact MIDI arrangements natively, unlocking infinite creative control in the booth.
         </p>
       </section>
 
-      {/* 2. CORE GENERATOR SECTION (UNCHANGED SIMPLICITY) */}
-      <section style={{ maxWidth: '800px', width: '100%', marginBottom: '4rem' }}>
-        <div className="glass-panel" style={{ width: '100%', padding: 'clamp(1.5rem, 5vw, 3rem)' }}>
+      {/* 2. CORE GENERATOR SECTION */}
+      <style>{`
+        @media (max-width: 1200px) {
+          .studio-monitor { display: none !important; }
+        }
+      `}</style>
+      <section style={{ maxWidth: '800px', width: '100%', marginBottom: '4rem', position: 'relative' }}>
+        <img src="/studio_monitor.png" alt="Left Monitor" className="studio-monitor" style={{ position: 'absolute', left: '-300px', top: '50%', transform: 'translateY(-50%)', width: '380px', opacity: 0.5, zIndex: -1, pointerEvents: 'none' }} />
+        <img src="/studio_monitor.png" alt="Right Monitor" className="studio-monitor" style={{ position: 'absolute', right: '-300px', top: '50%', transform: 'translateY(-50%) scaleX(-1)', width: '380px', opacity: 0.5, zIndex: -1, pointerEvents: 'none' }} />
+
+        <div className="glass-panel" style={{ width: '100%', padding: 'clamp(1.5rem, 5vw, 3rem)', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vw, 2rem)' }}>
             
             {/* Central Prompt */}
@@ -231,13 +229,13 @@ export default function Home() {
                  <li>✓ 7 Royalty-Free Beats / Week</li>
                  <li>✓ Full Commercial Rights</li>
                  <li>✓ Standard 44.1kHz MP3 Output</li>
+                 <li>✓ 1 Free Neural Stem Isolation</li>
                  <li style={{ opacity: 0.3 }}>✗ Unlimited Generations</li>
-                 <li style={{ opacity: 0.3 }}>✗ Neural Stem Isolation</li>
                  <li style={{ opacity: 0.3 }}>✗ Basic Pitch MIDI Pack</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '2rem' }}>
-                 <CheckoutButton priceId="price_1TGxkWPz1LkOQIGYYE8he98O" label="BUY 10 TOKENS - $5" mode="payment" styleOverride={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} />
+                 <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginBottom: '0.5rem', fontStyle: 'italic' }}>*Token top-ups available after weekly limit</p>
                  <a href="/login" className="button" style={{ textAlign: 'center', width: '100%', padding: '1rem' }}>START CREATING</a>
               </div>
            </div>
@@ -248,11 +246,11 @@ export default function Home() {
               <h3 style={{ fontSize: '1.5rem', fontWeight: 700, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>PRODUCER</h3>
               <div style={{ fontSize: '3rem', fontWeight: 800, margin: '1rem 0 2rem 0' }}>$9.99<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-secondary)' }}>/mo</span></div>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem', color: 'rgba(255,255,255,0.8)' }}>
-                 <li><span style={{ color: 'var(--accent-purple)' }}>✓</span> <b>Infinite</b> Gen-3 Beats / Week</li>
+                 <li><span style={{ color: 'var(--accent-purple)' }}>✓</span> <b>Infinite</b> Beats / Week</li>
                  <li><span style={{ color: 'var(--accent-purple)' }}>✓</span> Full Commercial Rights</li>
                  <li><span style={{ color: 'var(--accent-purple)' }}>✓</span> High-Fidelity MP3 Downloads</li>
                  <li><span style={{ color: 'var(--accent-purple)' }}>✓</span> Saved Smart Crate Library</li>
-                 <li style={{ opacity: 0.3 }}>✗ Neural Stem Isolation</li>
+                 <li><span style={{ color: 'var(--accent-purple)' }}>✓</span> <b>10 Neural Stems / Week</b></li>
                  <li style={{ opacity: 0.3 }}>✗ Basic Pitch MIDI Pack</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
@@ -267,7 +265,7 @@ export default function Home() {
               <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-blue)' }}>SUPER PRODUCER</h3>
               <div style={{ fontSize: '3rem', fontWeight: 800, margin: '1rem 0 2rem 0' }}>$19.99<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-secondary)' }}>/mo</span></div>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem', color: 'rgba(255,255,255,0.8)' }}>
-                 <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> <b>Infinite</b> Gen-3 Beats / Week</li>
+                 <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> <b>Infinite</b> Beats / Week</li>
                  <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> Full Commercial Rights</li>
                  <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> <b>Neural Demucs Stem Extraction</b></li>
                  <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> <b>Spotify Basic Pitch MIDI Isolator</b></li>

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, crates: any[], view?: 'grid' | 'list' }) {
+export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }: { gen: any, crates: any[], view?: 'grid' | 'list', role?: string }) {
   const [stemStatus, setStemStatus] = useState(gen.stemStatus || 'none');
   const [stems, setStems] = useState<any>(
     typeof gen.stems === 'string' ? JSON.parse(gen.stems) : gen.stems || null
@@ -259,7 +259,7 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
                         <a href={stems[keyName]} target="_blank" download={`TYPEBEAT_${gen.id}_${keyName}.mp3`} className="button" style={{ flex: 1, fontSize: '0.7rem', padding: '6px', textAlign: 'center', background: '#30363a', textTransform: 'capitalize' }}>
                           Download {keyName} mp3
                         </a>
-                        {(keyName === 'bass' || keyName === 'synthesizer') && (
+                        {(keyName === 'bass' || keyName === 'synthesizer') && role === 'SUPER_PRODUCER' && (
                            <button 
                              onClick={() => handleExtractMidi(stems[keyName], keyName)}
                              disabled={splitting}

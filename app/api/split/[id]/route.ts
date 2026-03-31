@@ -15,8 +15,31 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     }
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (user?.role === 'ARTIST' || user?.role === 'PRODUCER') {
-      return NextResponse.json({ error: 'Feature Locked. Upgrade to SUPER PRODUCER to unlock Neural Stem Separation.' }, { status: 403 });
+    if (!user) {
+        return NextResponse.json({ error: 'User mapping not found.' }, { status: 404 });
+    }
+
+    // Role-based Neural Stem Firewalls
+    if (user.role === 'ARTIST') {
+       const stemCount = await prisma.generation.count({
+           where: { userId: userId, stemStatus: { not: 'none' } }
+       });
+       if (stemCount >= 1) {
+           return NextResponse.json({ error: 'Artist Tier is limited to 1 lifetime Stem Extraction. Upgrade to PRODUCER for weekly stems!' }, { status: 403 });
+       }
+    } else if (user.role === 'PRODUCER') {
+       const sevenDaysAgo = new Date();
+       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+       const stemCountWeekly = await prisma.generation.count({
+           where: { 
+               userId: userId, 
+               stemStatus: { not: 'none' }, 
+               createdAt: { gte: sevenDaysAgo } 
+           }
+       });
+       if (stemCountWeekly >= 10) {
+           return NextResponse.json({ error: 'Producer Tier is limited to 10 Stem Extractions per week. Upgrade to SUPER PRODUCER for infinite studio access!' }, { status: 403 });
+       }
     }
 
     const gen = await prisma.generation.findUnique({ where: { id: params.id } });

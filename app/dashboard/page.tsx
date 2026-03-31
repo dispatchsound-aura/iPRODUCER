@@ -12,6 +12,9 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
   const session = await getSession();
   const userId = session?.userId || 'ghost-user'; // Strictly isolate all Prisma queries
 
+  const currentUser = userId !== 'ghost-user' ? await prisma.user.findUnique({ where: { id: userId } }) : null;
+  const role = currentUser?.role || 'ARTIST';
+
   const pendingGenerations = await prisma.generation.findMany({ 
     where: { 
       userId, 
@@ -123,7 +126,7 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
 
         <section style={{ padding: 'clamp(1rem, 4vw, 3rem)', overflowY: 'auto' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%' }} className="glass-panel">
-            <BeatContainer generations={generations} crates={crates} />
+            <BeatContainer generations={generations} crates={crates} role={role} />
           </div>
         </section>
       </div>

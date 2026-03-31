@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import BeatCard from './BeatCard';
 
-export default function BeatContainer({ generations, crates }: { generations: any[], crates: any[] }) {
+export default function BeatContainer({ generations, crates, role = 'ARTIST' }: { generations: any[], crates: any[], role?: string }) {
   const [view, setView] = useState<'grid' | 'list'>('grid');
 
   if (generations.length === 0) {
@@ -23,11 +23,11 @@ export default function BeatContainer({ generations, crates }: { generations: an
 
        {view === 'grid' ? (
          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem', alignItems: 'start' }}>
-            {generations.map(gen => <BeatCard key={gen.id} gen={gen} crates={crates} view={view} />)}
+            {generations.map(gen => <BeatCard key={gen.id} gen={gen} crates={crates} view={view} role={role} />)}
          </div>
        ) : (
          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '750px', margin: '0 auto', width: '100%' }}>
-            {generations.map(gen => <BeatCard key={gen.id} gen={gen} crates={crates} view={view} />)}
+            {generations.map(gen => <BeatCard key={gen.id} gen={gen} crates={crates} view={view} role={role} />)}
          </div>
        )}
     </div>
