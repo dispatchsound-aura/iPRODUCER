@@ -61,11 +61,9 @@ export async function GET(req: Request, { params }: { params: { generationId: st
               try {
                 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
                 const prediction = await replicate.predictions.create({
-                  version: "171d8e6a1e4a870b0f17f00c850b3d89d1205848a129d6110a933feaffb2ea6a", // triadmusic
+                  version: "25a173108cff36ef9f80f854c162d01df9e6528be175794b8115891fc8a1151d", // cjwbw/demucs
                   input: {
-                    audio: finalBeatUrl,
-                    format: "mp3",
-                    model_name: "htdemucs"
+                    audio: finalBeatUrl
                   }
                 });
                 stemStatus = 'splitting';
