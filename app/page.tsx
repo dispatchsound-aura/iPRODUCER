@@ -5,17 +5,38 @@ import { useRouter } from 'next/navigation';
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [bpm, setBpm] = useState<string>('');
+  const [musicalKey, setMusicalKey] = useState<string>('');
+  const [recentPrompts, setRecentPrompts] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('iproducer_recent_prompts');
+      if (saved) setRecentPrompts(JSON.parse(saved));
+    } catch(e) {}
+  }, []);
 
   const handleGenerate = async () => {
     if (!prompt) return;
     setLoading(true);
+    
+    // Save to recents immediately
+    try {
+      const updatedRecents = [prompt, ...recentPrompts.filter(p => p !== prompt)].slice(0, 5);
+      setRecentPrompts(updatedRecents);
+      localStorage.setItem('iproducer_recent_prompts', JSON.stringify(updatedRecents));
+    } catch(e) {}
+
+    // Attach strict musical key constraints if present
+    const injection = musicalKey ? `, strictly generated in the exact musical key of ${musicalKey}` : ``;
+    const finalPrompt = prompt + injection;
+
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, bpm: bpm ? parseInt(bpm, 10) : undefined }),
+        body: JSON.stringify({ prompt: finalPrompt, bpm: bpm ? parseInt(bpm, 10) : undefined }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
@@ -60,19 +81,64 @@ export default function Home() {
               onChange={(e) => setPrompt(e.target.value)}
               style={{ resize: 'none', fontSize: 'clamp(1rem, 3.5vw, 1.2rem)', padding: 'clamp(1rem, 4vw, 1.5rem)', lineHeight: '1.6', width: '100%' }}
             />
+            
+            {/* Recent Prompts List */}
+            {recentPrompts.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '1rem' }}>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', padding: '4px 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Recent:</span>
+                {recentPrompts.map((p, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setPrompt(p)}
+                    style={{ 
+                      background: 'rgba(255,255,255,0.05)', 
+                      border: '1px solid rgba(255,255,255,0.1)', 
+                      color: '#AAA', 
+                      borderRadius: '12px', 
+                      padding: '4px 12px', 
+                      fontSize: '0.8rem',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '120px'
+                    }}
+                    title={p}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Simple Tempo Control */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', gap: '1rem' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500,  }}>TEMPO OVERRIDE (BPM)</span>
-            <input 
-              type="number" 
-              className="input-field" 
-              placeholder="Auto" 
-              value={bpm}
-              onChange={(e) => setBpm(e.target.value)}
-              style={{ width: '100px', textAlign: 'center', padding: '0.5rem', background: 'rgba(0,0,0,0.4)', flexGrow: 1, maxWidth: '150px' }}
-            />
+          {/* Musical Parameters */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            {/* Simple Tempo Control */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 500, letterSpacing: '1px' }}>TEMPO (BPM)</span>
+              <input 
+                type="number" 
+                className="input-field" 
+                placeholder="Auto" 
+                value={bpm}
+                onChange={(e) => setBpm(e.target.value)}
+                style={{ width: '80px', textAlign: 'center', padding: '0.4rem', background: 'rgba(0,0,0,0.4)' }}
+              />
+            </div>
+
+            {/* Musical Key Control */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 500, letterSpacing: '1px' }}>KEY (OPTIONAL)</span>
+              <input 
+                type="text" 
+                className="input-field" 
+                placeholder="e.g. C Minor" 
+                value={musicalKey}
+                onChange={(e) => setMusicalKey(e.target.value)}
+                style={{ width: '100px', textAlign: 'center', padding: '0.4rem', background: 'rgba(0,0,0,0.4)', fontSize: '0.9rem' }}
+              />
+            </div>
           </div>
 
           {/* Master Trigger */}

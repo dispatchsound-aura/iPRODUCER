@@ -1,16 +1,19 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { getSession } from '../lib/auth';
 
 export const metadata: Metadata = {
   title: 'Typebeat Studio pro',
   description: 'AI Instrumental Generation',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+
   return (
     <html lang="en">
       <body>
@@ -42,9 +45,17 @@ export default function RootLayout({
 
           {/* Right: Quick Controls */}
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <a href="/" className="button" style={{ padding: '8px 16px', fontSize: '0.9rem', border: 'none', background: 'transparent' }}>Studio</a>
-            <a href="/dashboard" className="button" style={{ padding: '8px 16px', fontSize: '0.9rem', border: 'none', background: 'transparent' }}>Library</a>
-            <a href="/signup" className="button highlight">Get Access</a>
+            {session ? (
+              <>
+                <a href="/dashboard" className="button" style={{ padding: '8px 16px', fontSize: '0.9rem', border: 'none', background: 'transparent' }}>Catalog</a>
+                <a href="/dashboard" className="button highlight">Studio Profile</a>
+              </>
+            ) : (
+              <>
+                <a href="/login" className="button highlight" style={{ background: 'transparent', border: '1px solid var(--accent-blue)', color: 'white' }}>Log In</a>
+                <a href="/signup" className="button highlight" style={{ background: 'var(--accent-purple)' }}>Join</a>
+              </>
+            )}
           </div>
         </header>
 
