@@ -287,8 +287,8 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
                 MP3
               </a>
               {stemStatus === 'none' && (
-                <button onClick={handleSplit} disabled={splitting} className="button highlight" style={{ flex: 2 }}>
-                  {splitting ? 'Extracting...' : 'Isolate Stems'}
+                <button disabled className="button" style={{ flex: 2, background: 'rgba(255,50,50,0.2)', color: 'var(--accent-orange)', fontSize: '0.65rem', border: '1px solid rgba(255,100,50,0.3)', pointerEvents: 'none' }}>
+                  Stems (BETA) - Under Review, Back Shortly
                 </button>
               )}
               {stemStatus === 'splitting' && (

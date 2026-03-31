@@ -17,6 +17,8 @@ export async function POST(req: Request) {
     if (userId) {
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (user?.role === 'ARTIST') {
+        // TEMPORARY BYPASS: Generation is functionally set to FREE for all users while STEMS are under engineering review.
+        /* 
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         const count = await prisma.generation.count({
@@ -37,6 +39,7 @@ export async function POST(req: Request) {
              return NextResponse.json({ error: 'Generation Limit Reached. Buy a $5 Token Pack or Upgrade to PRODUCER to continue the session!' }, { status: 403 });
           }
         }
+        */
       }
     }
 
