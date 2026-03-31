@@ -16,6 +16,7 @@
     "jose": "^6.2.2",
     "jszip": "^3.10.1",
     "midi-writer-js": "^3.2.1",
+    "music-tempo": "^1.0.3",
     "next": "^14.2.22",
     "node-id3": "^0.2.9",
     "react": "^18",

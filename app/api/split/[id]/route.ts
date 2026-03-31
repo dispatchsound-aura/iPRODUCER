@@ -59,9 +59,11 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
     // Step 2: Detonate the MP3 strictly through the Demucs ONNX pipeline
     const prediction = await replicate.predictions.create({
-      version: "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953", // cjwbw/demucs
+      version: "171d8e6a1e4a870b0f17f00c850b3d89d1205848a129d6110a933feaffb2ea6a", // triadmusic/stems-separator
       input: {
-        audio: gen.beatUrl
+        youtube_url: gen.beatUrl, // The Replicate model accepts pure MP3/WAV urls organically through this param 
+        format: "mp3", 
+        model_name: "htdemucs"
       }
     });
 

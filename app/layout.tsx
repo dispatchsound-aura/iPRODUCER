@@ -39,8 +39,11 @@ export default async function RootLayout({
             <div className="spinning-record" style={{ fontSize: '1.8rem' }}>
               💿
             </div>
-            <a href="/" style={{ fontWeight: 800, letterSpacing: '2px', fontSize: '1.4rem', color: '#FFF', display: 'flex', alignItems: 'center', gap: '4px', textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
-              TYPEBEAT
+            <a href="/" style={{ fontWeight: 800, letterSpacing: '2px', fontSize: '1.4rem', color: '#FFF', display: 'flex', alignItems: 'center', gap: '8px', textShadow: '0 0 20px rgba(255,255,255,0.3)', textDecoration: 'none' }}>
+              TYPEBEAT <span style={{ fontWeight: 400, opacity: 0.8 }}>Studio</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 900, background: 'var(--accent-orange)', color: '#000', padding: '2px 6px', borderRadius: '4px', letterSpacing: '1px', textShadow: 'none', boxShadow: '0 0 10px rgba(251, 146, 60, 0.4)' }}>
+                BETA
+              </span>
             </a>
           </div>
 

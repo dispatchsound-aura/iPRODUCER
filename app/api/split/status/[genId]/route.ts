@@ -8,7 +8,7 @@ export async function GET(req: Request, { params }: { params: { genId: string } 
   try {
     const gen = await prisma.generation.findUnique({ where: { id: params.genId } });
     
-    if (!gen || !gen.lalalTaskId) {
+    if (!gen || !(gen as any).lalalTaskId) {
       return NextResponse.json({ error: 'Generation Extraction Tasks not found' }, { status: 404 });
     }
 
@@ -18,7 +18,7 @@ export async function GET(req: Request, { params }: { params: { genId: string } 
       auth: process.env.REPLICATE_API_TOKEN,
     });
 
-    const tasks = JSON.parse(gen.lalalTaskId);
+    const tasks = JSON.parse((gen as any).lalalTaskId);
     const predictionId = tasks.replicateId;
 
     if (!predictionId) {
@@ -29,16 +29,17 @@ export async function GET(req: Request, { params }: { params: { genId: string } 
     const prediction = await replicate.predictions.get(predictionId);
 
     if (prediction.status === 'succeeded' && prediction.output) {
-       // Normalize the Demucs dictionary back to the established UI standards
+       // Deeply parse the TriadMusic dictionary back out directly to the established UI standard
+       const dict = prediction.output.stems || prediction.output;
        const stems = {
-          bass: prediction.output.bass,
-          drums: prediction.output.drums,
-          synthesizer: prediction.output.other, // We classify 'other' as synthesizer for instrumental beats
-          residuals: prediction.output.vocals // Instrumental renders might have artifact bleed here
+          bass: dict.bass,
+          drums: dict.drums,
+          synthesizer: dict.other, 
+          residuals: dict.vocals 
        };
 
       // Complete insertion
-      await prisma.generation.update({
+      await (prisma as any).generation.update({
         where: { id: gen.id },
         data: {
           stemStatus: 'ready',

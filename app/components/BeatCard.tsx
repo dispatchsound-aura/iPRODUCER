@@ -16,6 +16,8 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
   const [vibe, setVibe] = useState(gen.vibe || '');
   const [keyProperty, setKeyProperty] = useState(gen.key || '');
   const [crateId, setCrateId] = useState(gen.crateId || '');
+  const [bpm, setBpm] = useState<string>(gen.bpm ? gen.bpm.toString() : '');
+  const [detectingBpm, setDetectingBpm] = useState(false);
   const [status, setStatus] = useState(gen.status);
   const [beatUrl, setBeatUrl] = useState(gen.beatUrl);
 
@@ -87,9 +89,32 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
     await fetch(`/api/generations/${gen.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, vibe, crateId, key: keyProperty })
+      body: JSON.stringify({ title, vibe, crateId, key: keyProperty, bpm: bpm ? parseInt(bpm, 10) : undefined })
     });
     setEditing(false);
+  };
+
+  const handleDetectBpm = async () => {
+     if (!beatUrl) return;
+     setDetectingBpm(true);
+     try {
+       // @ts-ignore
+       const MusicTempo = (await import('music-tempo')).default || (await import('music-tempo'));
+       const res = await fetch('/api/proxy-audio?url=' + encodeURIComponent(beatUrl));
+       const arrayBuffer = await res.arrayBuffer();
+       
+       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 44100 });
+       const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+       
+       // Algorithmically map physical peak variances against standard mathematical histograms
+       const channelData = audioBuffer.getChannelData(0);
+       const calcTempo = new (MusicTempo.MusicTempo || MusicTempo)(channelData);
+       setBpm(Math.round(calcTempo.tempo).toString());
+     } catch (e) {
+       console.error("BPM Detect Error", e);
+       alert("Failed to analyze neural sequence arrays.");
+     }
+     setDetectingBpm(false);
   };
 
   const handleExtractMidi = async (audioUrl: string, filterName: string) => {
@@ -189,7 +214,15 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
           <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: isList ? '0' : '0.5rem' }}>
             <input type="text" className="input-field" placeholder="Beat Title" value={title} onChange={e => setTitle(e.target.value)} />
             <input type="text" className="input-field" placeholder="Vibe / Genre" value={vibe} onChange={e => setVibe(e.target.value)} />
-            <input type="text" className="input-field" placeholder="Musical Key (e.g. C# Minor)" value={keyProperty} onChange={e => setKeyProperty(e.target.value)} />
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+               <input type="text" className="input-field" style={{ flex: 1.5 }} placeholder="Musical Key (e.g. C# Minor)" value={keyProperty} onChange={e => setKeyProperty(e.target.value)} />
+               <div style={{ flex: 1, display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                 <input type="number" className="input-field" style={{ width: '60px', border: 'none', borderRadius: 0 }} placeholder="BPM" value={bpm} onChange={e => setBpm(e.target.value)} />
+                 <button onClick={handleDetectBpm} disabled={detectingBpm} style={{ flex: 1, background: 'var(--accent-orange)', color: '#000', border: 'none', fontWeight: 800, fontSize: '0.75rem', cursor: detectingBpm ? 'not-allowed' : 'pointer' }}>
+                   {detectingBpm ? '...' : 'ANALYZER'}
+                 </button>
+               </div>
+            </div>
             <select className="input-field" value={crateId} onChange={e => setCrateId(e.target.value)}>
               <option value="">No Crate</option>
               {crates.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
