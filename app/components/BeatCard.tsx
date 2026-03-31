@@ -130,7 +130,7 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
           {gen.id === 'ephemeral' ? (
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <button 
-                onClick={() => alert("Registration required to save & download beats. Please implement your custom Auth Provider page!")} 
+                onClick={() => window.location.href = '/signup'} 
                 className="button highlight" 
                 style={{ flex: 1, textAlign: 'center', background: 'var(--accent-purple)' }}
               >
