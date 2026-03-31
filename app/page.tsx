@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import CheckoutButton from './components/CheckoutButton';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -252,7 +253,7 @@ export default function Home() {
                  <li style={{ opacity: 0.3 }}>✗ Basic Pitch MIDI Pack</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
-              <a href="/login" className="button highlight" style={{ marginTop: '2rem', textAlign: 'center', width: '100%', padding: '1rem' }}>SUBSCRIBE NOW</a>
+              <CheckoutButton priceId="prod_UFRIfR3pvgGMZ7" label="SUBSCRIBE NOW" isHighlight={true} />
            </div>
 
            {/* Tier 3: Super Producer */}
@@ -271,7 +272,7 @@ export default function Home() {
                  <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> Beat Catalog Matrix</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
-              <a href="/login" className="button highlight" style={{ marginTop: '2rem', textAlign: 'center', width: '100%', padding: '1rem', background: 'var(--accent-blue)' }}>MASTER THE STUDIO</a>
+              <CheckoutButton priceId="prod_UFRITsDGrQgSCJ" label="MASTER THE STUDIO" isHighlight={true} styleOverride={{ background: 'var(--accent-blue)' }} />
            </div>
         </div>
       </section>
