@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     // INJECT: Hardcore Instrumental Mode
     // Violently engineer the prompt to eradicate latent vocal capabilities
     const cleanPrompt = prompt.replace(/(singer|rapper|vocals|voice|singing|lyric|words)/gi, '');
-    const finalPrompt = `[Instrumental Only, Strictly No Vocals, Pure Beat, Master Track] ${cleanPrompt}`;
+    const finalPrompt = `${cleanPrompt}, no lyrics, No Words, Instrumental, no vocals`;
 
     const bodyObj: any = {
       prompt: finalPrompt,

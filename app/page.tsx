@@ -34,44 +34,44 @@ export default function Home() {
   };
 
   return (
-    <main style={{ padding: '6rem 2rem', maxWidth: '800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <main style={{ padding: 'clamp(2rem, 10vh, 6rem) 1rem', maxWidth: '800px', margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', overflowX: 'hidden' }}>
       
       {/* Title Header */}
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '4rem', fontWeight: 800, background: 'linear-gradient(to right, #FFF, rgba(255,255,255,0.4))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem', textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+      <div style={{ textAlign: 'center', marginBottom: '3rem', width: '100%' }}>
+        <h1 style={{ fontSize: 'clamp(2.2rem, 8vw, 4rem)', fontWeight: 800, background: 'linear-gradient(to right, #FFF, rgba(255,255,255,0.4))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '1rem', textShadow: '0 10px 30px rgba(0,0,0,0.5)', lineHeight: 1.1 }}>
           Create the Infinite.
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', fontWeight: 300 }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(1rem, 4vw, 1.2rem)', fontWeight: 300, padding: '0 1rem' }}>
           The highest fidelity instrumental generation engine.
         </p>
       </div>
 
       {/* Massive Glass Generator Card */}
-      <div className="glass-panel" style={{ width: '100%', padding: '3rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div className="glass-panel" style={{ width: '100%', padding: 'clamp(1.5rem, 5vw, 3rem)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vw, 2rem)' }}>
           
           {/* Central Prompt */}
-          <div>
+          <div style={{ width: '100%' }}>
             <textarea 
               className="input-field" 
-              placeholder="Describe your beat (e.g. A dark, atmospheric trap beat in the style of Metro Boomin with heavy 808s...)"
+              placeholder="Describe your beat (e.g. A dark trap beat in the style of Metro Boomin with heavy 808s...)"
               rows={5}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              style={{ resize: 'none', fontSize: '1.2rem', padding: '1.5rem', lineHeight: '1.6' }}
+              style={{ resize: 'none', fontSize: 'clamp(1rem, 3.5vw, 1.2rem)', padding: 'clamp(1rem, 4vw, 1.5rem)', lineHeight: '1.6', width: '100%' }}
             />
           </div>
 
           {/* Simple Tempo Control */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500 }}>TEMPO OVERRIDE (BPM)</span>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', gap: '1rem' }}>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', fontWeight: 500,  }}>TEMPO OVERRIDE (BPM)</span>
             <input 
               type="number" 
               className="input-field" 
               placeholder="Auto" 
               value={bpm}
               onChange={(e) => setBpm(e.target.value)}
-              style={{ width: '120px', textAlign: 'center', padding: '0.5rem', background: 'rgba(0,0,0,0.4)' }}
+              style={{ width: '100px', textAlign: 'center', padding: '0.5rem', background: 'rgba(0,0,0,0.4)', flexGrow: 1, maxWidth: '150px' }}
             />
           </div>
 

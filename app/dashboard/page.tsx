@@ -85,7 +85,7 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
       </div>
       
       {/* Workspace Panel Split */}
-      <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', flex: 1, height: 'calc(100vh - 120px)' }}>
+      <div className="dashboard-grid">
         
         {/* Left Sidebar (Media Browser) */}
         <aside style={{ borderRight: '1px solid var(--glass-border)', padding: '2rem 1rem', overflowY: 'auto', background: 'var(--glass-bg)' }}>
@@ -110,8 +110,8 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
           <CreateCrateButton />
         </aside>
 
-        <section style={{ padding: '3rem', overflowY: 'auto' }}>
-          <div style={{ maxWidth: '1000px', margin: '0 auto' }} className="glass-panel">
+        <section style={{ padding: 'clamp(1rem, 4vw, 3rem)', overflowY: 'auto' }}>
+          <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%' }} className="glass-panel">
             <BeatContainer generations={generations} crates={crates} />
           </div>
         </section>
