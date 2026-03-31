@@ -253,7 +253,7 @@ export default function Home() {
                  <li style={{ opacity: 0.3 }}>✗ Basic Pitch MIDI Pack</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
-              <CheckoutButton priceId="prod_UFRIfR3pvgGMZ7" label="SUBSCRIBE NOW" isHighlight={true} />
+              <CheckoutButton priceId="price_1TGwh9Pz1LkOQIGYG8lmD2w0" label="SUBSCRIBE NOW" isHighlight={true} />
            </div>
 
            {/* Tier 3: Super Producer */}
@@ -272,7 +272,7 @@ export default function Home() {
                  <li><span style={{ color: 'var(--accent-blue)' }}>✓</span> Beat Catalog Matrix</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
-              <CheckoutButton priceId="prod_UFRITsDGrQgSCJ" label="MASTER THE STUDIO" isHighlight={true} styleOverride={{ background: 'var(--accent-blue)' }} />
+              <CheckoutButton priceId="price_1TGwhAPz1LkOQIGYHNcXRFFw" label="MASTER THE STUDIO" isHighlight={true} styleOverride={{ background: 'var(--accent-blue)' }} />
            </div>
         </div>
       </section>

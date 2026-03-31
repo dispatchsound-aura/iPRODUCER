@@ -1,0 +1,20 @@
+
+> iproduce-app@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env
+
+
+> Build error occurred
+Error: You cannot use different slug names for the same dynamic path ('generationId' !== 'id').
+    at handleSlug (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:94:31)
+    at UrlNode._insert (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:131:17)
+    at UrlNode._insert (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode._insert (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:142:40)
+    at UrlNode.insert (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:13:14)
+    at /Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:46
+    at Array.forEach (<anonymous>)
+    at getSortedRoutes (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/shared/lib/router/utils/sorted-routes.js:165:21)
+    at /Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/build/index.js:625:65
+    at Span.traceFn (/Users/inova/Desktop/dev/iPRODUCE app/node_modules/next/dist/trace/trace.js:147:20)

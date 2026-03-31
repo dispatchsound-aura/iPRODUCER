@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { stripe } from '../../../lib/stripe';
+import { stripe } from '../../../../lib/stripe';
 import { headers } from 'next/headers';
 
 const prisma = new PrismaClient();

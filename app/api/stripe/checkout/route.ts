@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getSession } from '../../../lib/auth';
-import { stripe } from '../../../lib/stripe';
+import { getSession } from '../../../../lib/auth';
+import { stripe } from '../../../../lib/stripe';
 
 const prisma = new PrismaClient();
 

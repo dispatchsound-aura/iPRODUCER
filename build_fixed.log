@@ -1,0 +1,32 @@
+
+> iproduce-app@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./app/api/admin/role/route.ts
+Module not found: Can't resolve '../../../lib/auth'
+
+https://nextjs.org/docs/messages/module-not-found
+
+./app/api/stripe/checkout/route.ts
+Module not found: Can't resolve '../../../lib/auth'
+
+https://nextjs.org/docs/messages/module-not-found
+
+./app/api/stripe/checkout/route.ts
+Module not found: Can't resolve '../../../lib/stripe'
+
+https://nextjs.org/docs/messages/module-not-found
+
+./app/api/stripe/webhook/route.ts
+Module not found: Can't resolve '../../../lib/stripe'
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+> Build failed because of webpack errors
