@@ -51,7 +51,7 @@ export default async function ProfilePage() {
               <strong>Studio Announcement:</strong> We are currently experiencing extremely high traffic volumes as hundreds of producers cook up beats! Please be patient, generating the highest-fidelity instrumentals takes immense computing power. 
             </p>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '1rem' }}>
-              — Team iPRODUCER
+              — Team TYPEBEAT
             </p>
           </div>
         </div>

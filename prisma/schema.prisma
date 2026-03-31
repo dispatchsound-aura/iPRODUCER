@@ -29,6 +29,9 @@ model Generation {
   bpm       Int?
   userId    String?
   folderId  String?
+  stemStatus String @default("none")
+  lalalTaskId String?
+  stems      Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

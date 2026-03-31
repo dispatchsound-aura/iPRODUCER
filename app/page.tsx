@@ -12,7 +12,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('iproducer_recent_prompts');
+      const saved = localStorage.getItem('typebeat_recent_prompts');
       if (saved) setRecentPrompts(JSON.parse(saved));
     } catch(e) {}
   }, []);
@@ -25,7 +25,7 @@ export default function Home() {
     try {
       const updatedRecents = [prompt, ...recentPrompts.filter(p => p !== prompt)].slice(0, 5);
       setRecentPrompts(updatedRecents);
-      localStorage.setItem('iproducer_recent_prompts', JSON.stringify(updatedRecents));
+      localStorage.setItem('typebeat_recent_prompts', JSON.stringify(updatedRecents));
     } catch(e) {}
 
     // Attach strict musical key constraints if present

@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from 'react';
 
 export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, crates: any[], view?: 'grid' | 'list' }) {
-  const [stemStatus, setStemStatus] = useState(gen.stemStatus);
+  const [stemStatus, setStemStatus] = useState(gen.stemStatus || 'none');
+  const [stems, setStems] = useState<any>(
+    typeof gen.stems === 'string' ? JSON.parse(gen.stems) : gen.stems || null
+  );
   const [splitting, setSplitting] = useState(false);
   const [editing, setEditing] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -13,6 +16,8 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
   const [crateId, setCrateId] = useState(gen.crateId || '');
   const [status, setStatus] = useState(gen.status);
   const [beatUrl, setBeatUrl] = useState(gen.beatUrl);
+
+  const isList = view === 'list';
 
   // Poll Sonauto API if generation is pending
   useEffect(() => {
@@ -39,12 +44,32 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
     return () => clearInterval(interval);
   }, [status, gen.id, gen.taskId]);
 
+  // Poll LALAL.AI Extractor Array
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (stemStatus === 'splitting') {
+      interval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/split/status/${gen.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'ready') {
+              setStemStatus('ready');
+              setStems(data.stems);
+            }
+          }
+        } catch (e) {}
+      }, 5000);
+    }
+    return () => clearInterval(interval);
+  }, [stemStatus, gen.id]);
+
   const handleSplit = async () => {
     setSplitting(true);
     setStemStatus('splitting');
     const res = await fetch(`/api/split/${gen.id}`, { method: 'POST' });
-    if (res.ok) {
-        setStemStatus('ready');
+    if (!res.ok) {
+        setStemStatus('none');
     }
     setSplitting(false);
   };
@@ -58,13 +83,66 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
     setEditing(false);
   };
 
-  const displayTitle = gen.title || gen.prompt.substring(0, 40) + (gen.prompt.length > 40 ? '...' : '');
-  const isList = view === 'list';
+  const handleExtractMidi = async (audioUrl: string, filterName: string) => {
+     setSplitting(true);
+     try {
+        const { BasicPitch, addPitchBendsToNoteEvents, noteFramesToTime, outputToNotesPoly } = await import('@spotify/basic-pitch');
+        const MidiWriter = (await import('midi-writer-js')).default;
+
+        const audioRes = await fetch(audioUrl);
+        const arrayBuffer = await audioRes.arrayBuffer();
+        
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 22050 });
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+        const basicPitch = new BasicPitch('/basic-pitch-model/model.json');
+        
+        const frames: number[][] = [];
+        const onsets: number[][] = [];
+        const contours: number[][] = [];
+        
+        await basicPitch.evaluateModel(
+          audioBuffer.getChannelData(0),
+          (f: any, o: any, c: any) => { frames.push(...f); onsets.push(...o); contours.push(...c); },
+          (p: number) => {}
+        );
+
+        const notesData = noteFramesToTime(
+           addPitchBendsToNoteEvents(contours, outputToNotesPoly(frames, onsets, 0.25, 0.25, 5))
+        );
+
+        const track = new MidiWriter.Track();
+        track.setTempo(gen.bpm || 120);
+        const ticksPerSecond = ((gen.bpm || 120) * 128) / 60;
+        
+        notesData.forEach(n => {
+           track.addEvent(new MidiWriter.NoteEvent({
+             pitch: [n.pitchMidi],
+             duration: 'T' + Math.max(1, Math.round(n.durationSeconds * ticksPerSecond)),
+             tick: Math.round(n.startTimeSeconds * ticksPerSecond),
+             velocity: Math.max(1, Math.min(100, Math.round(n.amplitude * 100)))
+           }));
+        });
+
+        const writer = new MidiWriter.Writer(track);
+        const dataUri = writer.dataUri();
+        
+        const a = document.createElement('a');
+        a.href = dataUri;
+        a.download = `TYPEBEAT_${gen.id}_${filterName}_MIDI.mid`;
+        a.click();
+     } catch(e) {
+        console.error(e);
+        alert("ML Engine Failed computing output.");
+     }
+     setSplitting(false);
+  };
+
+  const displayTitle = gen.title || gen.prompt?.replace(/(, no lyrics, No Words, Instrumental, no vocals)/ig, '')?.replace(/, strictly generated in the exact musical key of [a-zA-Z\\s]+(?=,|$)/ig, '') || 'Custom Beat Generation';
 
   return (
-    <div className="glass-panel" style={{ display: 'flex', flexDirection: isList ? 'row' : 'column', position: 'relative', gap: isList ? '1rem' : '0' }}>
+    <div className={`glass-panel ${isList ? 'list-view-card' : ''}`} style={{ display: 'flex', flexDirection: isList ? 'row' : 'column', position: 'relative', gap: isList ? '1rem' : '0' }}>
       
-      {/* Top Banner Accent */}
       {!isList && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'var(--accent-orange)' }} />}
       {isList && <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '4px', background: 'var(--accent-orange)' }} />}
 
@@ -96,7 +174,6 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
                 <p style={{ color: '#ccc', fontSize: '0.8rem', fontStyle: 'italic', marginTop: '4px' }}>"{gen.prompt}"</p>
               </div>
             )}
-            
             <button onClick={() => setEditing(true)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: 'var(--accent-orange)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700 }}>EDIT</button>
           </>
         ) : (
@@ -108,7 +185,8 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
               <option value="">No Crate</option>
               {crates.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <button className="button highlight" onClick={handleSaveMeta} style={{ alignSelf: 'flex-start' }}>Save Data</button>
+            <button className="button highlight" onClick={handleSaveMeta} style={{ alignSelf: 'flex-start' }}>Save Meta</button>
+            <button onClick={() => setEditing(false)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: 'var(--accent-orange)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700 }}>CANCEL</button>
           </div>
         )}
 
@@ -124,7 +202,7 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
         )}
       </div>
 
-      {gen.status === 'ready' && gen.beatUrl && (
+      {gen.status === 'ready' && beatUrl && (
         <div style={{ flex: isList ? '2' : 'none', marginTop: isList ? '0' : 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
              <div style={{ width: '8px', height: '8px', background: 'var(--accent-green)', borderRadius: '50%' }}></div>
@@ -156,7 +234,7 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
             </div>
           ) : (
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
-              <a href={`/api/audio/${gen.id}`} download={`Typebeat_${gen.id}_Master.mp3`} className="button" style={{ flex: 1, textAlign: 'center' }}>
+              <a href={`/api/audio/${gen.id}`} download={`TYPEBEAT_${gen.id}_Master.mp3`} className="button" style={{ flex: 1, textAlign: 'center' }}>
                 MP3
               </a>
               {stemStatus === 'none' && (
@@ -166,20 +244,32 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
               )}
               {stemStatus === 'splitting' && (
                 <button disabled className="button" style={{ flex: 2, background: 'var(--accent-orange)' }}>
-                  Processing... 
+                  Processing ML Stems... 
                 </button>
               )}
             </div>
           )}
 
-          {stemStatus === 'ready' && (
-             <div style={{ background: 'var(--control-bg)', padding: '0.5rem', borderRadius: '2px', border: '1px solid var(--border-color)' }}>
-                <h5 style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem', fontSize: '0.7rem' }}>TRACK MULTITRACKS</h5>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.2rem' }}>
-                   {['Vocals', 'Drums', 'Bass', 'Melody'].map((stemName, idx) => (
-                      <a key={idx} href={`/api/audio/${gen.id}?stem=${stemName}`} download={`Typebeat_${gen.id}_${stemName}.mp3`} className="button" style={{ fontSize: '0.7rem', padding: '4px', textAlign: 'center', background: '#30363a' }}>
-                        {stemName}
-                      </a>
+          {stemStatus === 'ready' && stems && (
+             <div style={{ background: 'var(--control-bg)', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', marginTop: '0.5rem' }}>
+                <h5 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Isolated Elements (LALAL.AI)</h5>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                   {Object.keys(stems).map((keyName, idx) => (
+                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
+                        <a href={stems[keyName]} target="_blank" download={`TYPEBEAT_${gen.id}_${keyName}.mp3`} className="button" style={{ flex: 1, fontSize: '0.7rem', padding: '6px', textAlign: 'center', background: '#30363a', textTransform: 'capitalize' }}>
+                          Download {keyName} mp3
+                        </a>
+                        {(keyName === 'bass' || keyName === 'synthesizer') && (
+                           <button 
+                             onClick={() => handleExtractMidi(stems[keyName], keyName)}
+                             disabled={splitting}
+                             className="button highlight" 
+                             style={{ flex: 1, fontSize: '0.7rem', padding: '6px', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white' }}
+                           >
+                             {splitting ? 'Processing MIDI...' : 'Extract MIDI'}
+                           </button>
+                        )}
+                      </div>
                    ))}
                 </div>
              </div>

@@ -3,7 +3,7 @@ import './globals.css';
 import { getSession } from '../lib/auth';
 
 export const metadata: Metadata = {
-  title: 'Typebeat Studio pro',
+  title: 'TYPEBEAT Studio pro',
   description: 'AI Instrumental Generation',
 };
 
@@ -39,7 +39,7 @@ export default async function RootLayout({
               💿
             </div>
             <a href="/" style={{ fontWeight: 800, letterSpacing: '2px', fontSize: '1.4rem', color: '#FFF', display: 'flex', alignItems: 'center', gap: '4px', textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
-              iPRODUCER
+              TYPEBEAT
             </a>
           </div>
 
