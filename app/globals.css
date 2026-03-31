@@ -194,4 +194,13 @@ a {
     grid-template-rows: auto 1fr;
     height: auto;
   }
+  
+  .list-view-card {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  .list-view-card > div {
+    padding-left: 0 !important;
+    margin-top: 1rem !important;
+  }
 }

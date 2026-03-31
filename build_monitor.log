@@ -10,16 +10,16 @@
    Skipping validation of types
    Skipping linting
    Collecting page data ...
-   Generating static pages (0/21) ...
-   Generating static pages (5/21) 
-   Generating static pages (10/21) 
-   Generating static pages (15/21) 
- ✓ Generating static pages (21/21)
+   Generating static pages (0/22) ...
+   Generating static pages (5/22) 
+   Generating static pages (10/22) 
+   Generating static pages (16/22) 
+ ✓ Generating static pages (22/22)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                              Size     First Load JS
-┌ ƒ /                                    3.96 kB        91.6 kB
+┌ ƒ /                                    3.99 kB        91.6 kB
 ├ ƒ /_not-found                          873 B          88.5 kB
 ├ ƒ /api/admin/auth                      0 B                0 B
 ├ ƒ /api/admin/credits                   0 B                0 B
@@ -38,15 +38,16 @@ Route (app)                              Size     First Load JS
 ├ ƒ /api/status/[generationId]           0 B                0 B
 ├ ƒ /api/stripe/checkout                 0 B                0 B
 ├ ƒ /api/stripe/webhook                  0 B                0 B
-├ ƒ /dashboard                           3.93 kB        91.6 kB
+├ ƒ /dashboard                           41.2 kB         129 kB
 ├ ƒ /dashboard/admin                     138 B          87.8 kB
+├ ○ /icon.jpg                            0 B                0 B
 ├ ƒ /login                               1.89 kB        89.5 kB
 ├ ƒ /profile                             531 B          88.2 kB
 └ ƒ /signup                              2.24 kB        89.9 kB
-+ First Load JS shared by all            87.7 kB
++ First Load JS shared by all            87.6 kB
   ├ chunks/117-bceba54427497846.js       31.7 kB
   ├ chunks/fd9d1056-72ef1b92e01f1388.js  53.6 kB
-  └ other shared chunks (total)          2.29 kB
+  └ other shared chunks (total)          2.27 kB
 
 
 ○  (Static)   prerendered as static content

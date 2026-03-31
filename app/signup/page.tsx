@@ -187,7 +187,7 @@ export default function SignupPage() {
         )}
 
         <div style={{ marginTop: '2.5rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Already have an account? <a href="#" style={{ color: 'var(--accent-cyan)', textDecoration: 'none', fontWeight: 500 }}>Sign in</a>
+          Already have an account? <a href="/login" style={{ color: 'var(--accent-cyan)', textDecoration: 'none', fontWeight: 500 }}>Sign in</a>
         </div>
       </div>
       
