@@ -40,8 +40,8 @@ export default async function RootLayout({
               💿
             </div>
             <a href="/" style={{ fontWeight: 800, letterSpacing: '2px', fontSize: '1.4rem', color: '#FFF', display: 'flex', alignItems: 'center', gap: '8px', textShadow: '0 0 20px rgba(255,255,255,0.3)', textDecoration: 'none' }}>
-              TYPEBEAT <span style={{ fontWeight: 400, opacity: 0.8 }}>Studio</span>
-              <span style={{ fontSize: '0.65rem', fontWeight: 900, background: 'var(--accent-orange)', color: '#000', padding: '2px 6px', borderRadius: '4px', letterSpacing: '1px', textShadow: 'none', boxShadow: '0 0 10px rgba(251, 146, 60, 0.4)' }}>
+              TYPEBEAT
+              <span style={{ fontSize: '0.65rem', fontWeight: 900, background: '#06b6d4', color: '#000', padding: '3px 8px', borderRadius: '4px', letterSpacing: '2px', textShadow: 'none', boxShadow: '0 0 15px rgba(6, 182, 212, 0.6)' }}>
                 BETA
               </span>
             </a>
