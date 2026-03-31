@@ -23,3 +23,14 @@ export async function PUT(req: Request, { params }: { params: { generationId: st
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request, { params }: { params: { generationId: string } }) {
+  try {
+    await prisma.generation.delete({
+      where: { id: params.generationId }
+    });
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}

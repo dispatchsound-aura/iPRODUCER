@@ -101,6 +101,21 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
     setEditing(false);
   };
 
+  const handleDelete = async () => {
+    if (confirm("Are you sure you want to permanently delete this track from your catalog? This cannot be undone.")) {
+      try {
+        const res = await fetch(`/api/generations/${gen.id}`, { method: 'DELETE' });
+        if (res.ok) {
+           window.location.reload();
+        } else {
+           alert("Failed to delete track. Please contact support.");
+        }
+      } catch (e) {
+         console.error(e);
+      }
+    }
+  };
+
   const handleDetectBpm = async () => {
      if (!beatUrl) return;
      setDetectingBpm(true);
@@ -234,7 +249,12 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
               <option value="">No Crate</option>
               {crates.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <button className="button highlight" onClick={handleSaveMeta} style={{ alignSelf: 'flex-start' }}>Save Meta</button>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+               <button className="button highlight" onClick={handleSaveMeta}>Save Meta</button>
+               <button className="button" onClick={handleDelete} style={{ background: 'rgba(255,50,50,0.1)', color: '#ff4d4d', border: '1px solid rgba(255,50,50,0.3)', fontSize: '0.85rem' }}>
+                 Delete Track
+               </button>
+            </div>
             <button onClick={() => setEditing(false)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: 'var(--accent-orange)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700 }}>CANCEL</button>
           </div>
         )}
