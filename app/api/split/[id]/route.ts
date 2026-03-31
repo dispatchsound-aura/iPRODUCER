@@ -14,6 +14,11 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       return NextResponse.json({ error: 'Unauthorized. You must be logged in to isolate stems.' }, { status: 401 });
     }
 
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (user?.role === 'ARTIST' || user?.role === 'PRODUCER') {
+      return NextResponse.json({ error: 'Feature Locked. Upgrade to SUPER PRODUCER to unlock Neural Stem Separation.' }, { status: 403 });
+    }
+
     const gen = await prisma.generation.findUnique({ where: { id: params.id } });
     
     if (!gen || gen.userId !== userId || !gen.beatUrl) {

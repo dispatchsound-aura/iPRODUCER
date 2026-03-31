@@ -14,6 +14,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
+    if (userId) {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (user?.role === 'ARTIST') {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const count = await prisma.generation.count({
+          where: {
+            userId: userId,
+            createdAt: { gte: sevenDaysAgo }
+          }
+        });
+        if (count >= 7) {
+          return NextResponse.json({ error: 'Generation Limit Reached. Upgrade to PRODUCER to unlock unlimited generations.' }, { status: 403 });
+        }
+      }
+    }
+
     const useV2 = !!bpm;
     const url = useV2 ? 'https://api.sonauto.ai/v1/generations/v2' : 'https://api.sonauto.ai/v1/generations/v3';
 

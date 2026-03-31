@@ -57,7 +57,7 @@ export default async function RootLayout({
               </>
             ) : (
               <>
-                <a href="/login" className="button highlight" style={{ background: 'transparent', border: '1px solid var(--accent-blue)', color: 'white' }}>Log In</a>
+                <a href="/login" className="button highlight" style={{ background: 'transparent', border: '1px solid var(--accent-blue)', color: 'white', whiteSpace: 'nowrap' }}>Log In</a>
                 <a href="/signup" className="button highlight" style={{ background: 'var(--accent-purple)' }}>Join</a>
               </>
             )}

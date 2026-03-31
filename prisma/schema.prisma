@@ -8,12 +8,16 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String?
-  role         String   @default("SUBSCRIBER") // "ADMIN", "SUBSCRIBER"
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                     String    @id @default(cuid())
+  email                  String    @unique
+  passwordHash           String?
+  role                   String    @default("ARTIST") // "ARTIST", "PRODUCER", "SUPER_PRODUCER", "ADMIN"
+  stripeCustomerId       String?   @unique
+  stripeSubscriptionId   String?   @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 }
 
 // These models ensure your existing iPRODUCE app pages
