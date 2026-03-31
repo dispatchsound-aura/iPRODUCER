@@ -69,9 +69,16 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
   const handleSplit = async () => {
     setSplitting(true);
     setStemStatus('splitting');
-    const res = await fetch(`/api/split/${gen.id}`, { method: 'POST' });
-    if (!res.ok) {
-        setStemStatus('none');
+    try {
+      const res = await fetch(`/api/split/${gen.id}`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+          alert(data.error || "Failed to split stems.");
+          setStemStatus('none');
+      }
+    } catch (e) {
+      alert("Network exception while calling the machine learning cluster.");
+      setStemStatus('none');
     }
     setSplitting(false);
   };
