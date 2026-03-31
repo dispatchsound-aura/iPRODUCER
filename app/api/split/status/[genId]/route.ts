@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import Replicate from 'replicate';
 
 const prisma = new PrismaClient();
 
@@ -8,45 +9,46 @@ export async function GET(req: Request, { params }: { params: { genId: string } 
     const gen = await prisma.generation.findUnique({ where: { id: params.genId } });
     
     if (!gen || !gen.lalalTaskId) {
-      return NextResponse.json({ error: 'Generation or Lalal Extraction Tasks not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Generation Extraction Tasks not found' }, { status: 404 });
     }
 
-    if (!process.env.LALAL_API_KEY) throw new Error("Missing LALAL Core API Key");
+    if (!process.env.REPLICATE_API_TOKEN) throw new Error("Missing REPLICATE API Key");
+
+    const replicate = new Replicate({
+      auth: process.env.REPLICATE_API_TOKEN,
+    });
 
     const tasks = JSON.parse(gen.lalalTaskId);
-    let allReady = true;
-    const finalStems: any = {};
+    const predictionId = tasks.replicateId;
 
-    for (const filter of Object.keys(tasks)) {
-       const taskId = tasks[filter];
-       const checkRes = await fetch(`https://www.lalal.ai/api/v1/check/?id=${taskId}`, {
-          method: 'GET',
-          headers: { 'X-License-Key': process.env.LALAL_API_KEY }
-       });
-       
-       const taskData = await checkRes.json();
-
-       if (taskData.status === 'success') {
-          // LALAL.ai usually dictates primary extracted stem as stem_track or similar
-          finalStems[filter] = taskData.stem_track_url || taskData.stem_track || taskData.stem_url || taskData.stem || taskData.download_url;
-       } else if (taskData.status === 'error') {
-          console.error(`Task ${taskId} for ${filter} failed`);
-          allReady = false; 
-       } else {
-          allReady = false; // still processing/queued
-       }
+    if (!predictionId) {
+       return NextResponse.json({ error: 'Legacy Split ID detected. Cannot process.' }, { status: 400 });
     }
 
-    if (allReady && Object.keys(finalStems).length > 0) {
+    // Ping the Replicate ML infrastructure for the Demucs calculation
+    const prediction = await replicate.predictions.get(predictionId);
+
+    if (prediction.status === 'succeeded' && prediction.output) {
+       // Normalize the Demucs dictionary back to the established UI standards
+       const stems = {
+          bass: prediction.output.bass,
+          drums: prediction.output.drums,
+          synthesizer: prediction.output.other, // We classify 'other' as synthesizer for instrumental beats
+          residuals: prediction.output.vocals // Instrumental renders might have artifact bleed here
+       };
+
       // Complete insertion
       await prisma.generation.update({
         where: { id: gen.id },
         data: {
           stemStatus: 'ready',
-          stems: JSON.stringify(finalStems)
+          stems: JSON.stringify(stems)
         }
       });
-      return NextResponse.json({ status: 'ready', stems: finalStems });
+      return NextResponse.json({ status: 'ready', stems });
+    } else if (prediction.status === 'failed' || prediction.status === 'canceled') {
+       console.error(`Replicate task failed: `, prediction.error);
+       return NextResponse.json({ error: 'Replicate Demucs generation failed' }, { status: 500 });
     }
 
     return NextResponse.json({ status: 'processing', tasks });

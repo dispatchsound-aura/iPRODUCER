@@ -252,7 +252,7 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
 
           {stemStatus === 'ready' && stems && (
              <div style={{ background: 'var(--control-bg)', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', marginTop: '0.5rem' }}>
-                <h5 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Isolated Elements (LALAL.AI)</h5>
+                <h5 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Isolated Elements (Demucs)</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                    {Object.keys(stems).map((keyName, idx) => (
                       <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>

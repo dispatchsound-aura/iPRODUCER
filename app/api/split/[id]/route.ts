@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getSession } from '../../../lib/auth';
+import { getSession } from '../../../../lib/auth';
+import Replicate from 'replicate';
 
 const prisma = new PrismaClient();
 
@@ -19,65 +20,33 @@ export async function POST(req: Request, { params }: { params: { id: string } })
       return NextResponse.json({ error: 'Generation not found or unauthorized' }, { status: 404 });
     }
 
-    if (!process.env.LALAL_API_KEY) {
-      return NextResponse.json({ error: 'LALAL_API_KEY environment variable is dangerously missing!' }, { status: 500 });
+    if (!process.env.REPLICATE_API_TOKEN) {
+      return NextResponse.json({ error: 'REPLICATE_API_TOKEN environment variable is missing!' }, { status: 500 });
     }
 
-    // STEP 1: Rip the raw byte buffer from the external Sonauto MP3 cluster
-    const audioRes = await fetch(gen.beatUrl);
-    const audioBuffer = await audioRes.arrayBuffer();
-
-    // STEP 2: Force-push the byte stream upward to the LALAL.AI Analysis Matrix
-    const uploadRes = await fetch('https://www.lalal.ai/api/v1/upload/', {
-      method: 'POST',
-      headers: {
-        'X-License-Key': process.env.LALAL_API_KEY,
-        'Content-Type': 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="typebeat_${gen.id}.mp3"`,
-      },
-      body: audioBuffer
+    // Step 1: Interface with Dedicated Machine Learning GPU Cluster via Replicate
+    const replicate = new Replicate({
+      auth: process.env.REPLICATE_API_TOKEN,
     });
-    const uploadData = await uploadRes.json();
-    
-    if (!uploadRes.ok || !uploadData.id) {
-       console.error("LALAL UPLOAD FAILED:", uploadData);
-       return NextResponse.json({ error: 'Lalal.ai Neural Storage failed to engage.' }, { status: 500 });
-    }
-    const sourceId = uploadData.id;
 
-    // STEP 3: Ignite concurrent Neural Extraction workflows
-    // We physically initiate three independent extraction trees to rip apart the instrumental
-    const filters = ['drums', 'bass', 'synthesizer'];
-    const taskIds: any = {};
+    // Step 2: Detonate the MP3 strictly through the Demucs ONNX pipeline
+    const prediction = await replicate.predictions.create({
+      version: "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953", // cjwbw/demucs
+      input: {
+        audio: gen.beatUrl
+      }
+    });
 
-    for (const filter of filters) {
-       const splitRes = await fetch('https://www.lalal.ai/api/v1/split/', {
-         method: 'POST',
-         headers: {
-           'X-License-Key': process.env.LALAL_API_KEY,
-           'Content-Type': 'application/json'
-         },
-         body: JSON.stringify({
-           source_id: sourceId,
-           filter: filter
-         })
-       });
-       const splitData = await splitRes.json();
-       if (splitData.task_id || splitData.id) {
-          taskIds[filter] = splitData.task_id || splitData.id;
-       }
-    }
-
-    // Commit the asynchronous extraction keys to Supabase Database
+    // We structurally map the Replicate ID inside the existing generic LALAL SQL schema footprint
     await prisma.generation.update({
       where: { id: gen.id },
       data: {
          stemStatus: 'splitting',
-         lalalTaskId: JSON.stringify(taskIds)
+         lalalTaskId: JSON.stringify({ replicateId: prediction.id })
       }
     });
 
-    return NextResponse.json({ success: true, tasks: taskIds });
+    return NextResponse.json({ success: true, tasks: { replicateId: prediction.id } });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
