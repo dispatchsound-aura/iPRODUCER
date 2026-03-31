@@ -32,7 +32,7 @@ export default function LoginPage() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push('/dashboard');
+        window.location.href = '/dashboard';
       }, 1000);
     } catch (err: any) {
       setError(err.message);
