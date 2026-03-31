@@ -26,7 +26,16 @@ export async function POST(req: Request) {
           }
         });
         if (count >= 7) {
-          return NextResponse.json({ error: 'Generation Limit Reached. Upgrade to PRODUCER to unlock unlimited generations.' }, { status: 403 });
+          if (user.availableCredits > 0) {
+             // Burn 1 token to bypass the weekly cap safely
+             await prisma.user.update({
+               where: { id: userId },
+               data: { availableCredits: { decrement: 1 } }
+             });
+             console.log(`User ${userId} burned a token. Remaining: ${user.availableCredits - 1}`);
+          } else {
+             return NextResponse.json({ error: 'Generation Limit Reached. Buy a $5 Token Pack or Upgrade to PRODUCER to continue the session!' }, { status: 403 });
+          }
         }
       }
     }

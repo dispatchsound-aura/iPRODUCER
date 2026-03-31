@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized. Please login.' }, { status: 401 });
     }
     
-    const { priceId } = await req.json();
+    const { priceId, mode = 'subscription' } = await req.json();
     if (!priceId) {
        return NextResponse.json({ error: 'Missing price payload.' }, { status: 400 });
     }
@@ -41,14 +41,17 @@ export async function POST(req: Request) {
     const origin = req.headers.get('origin') || 'http://localhost:3000';
     const checkoutSession = await stripe.checkout.sessions.create({
        customer: customerId,
-       mode: 'subscription',
+       mode: mode as any,
        payment_method_types: ['card'],
        line_items: [
            { price: priceId, quantity: 1 }
        ],
        success_url: `${origin}/dashboard?checkout=success`,
        cancel_url: `${origin}/dashboard?checkout=canceled`,
-       metadata: { userId: user.id }
+       metadata: { 
+           userId: user.id,
+           purchaseType: mode === 'payment' ? 'credits_10' : 'subscription'
+       }
     });
 
     return NextResponse.json({ url: checkoutSession.url });

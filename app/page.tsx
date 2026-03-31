@@ -236,7 +236,10 @@ export default function Home() {
                  <li style={{ opacity: 0.3 }}>✗ Basic Pitch MIDI Pack</li>
               </ul>
               <div style={{ flexGrow: 1 }} />
-              <a href="/login" className="button" style={{ marginTop: '2rem', textAlign: 'center', width: '100%', padding: '1rem' }}>START CREATING</a>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '2rem' }}>
+                 <CheckoutButton priceId="price_1TGxkWPz1LkOQIGYYE8he98O" label="BUY 10 TOKENS - $5" mode="payment" styleOverride={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)' }} />
+                 <a href="/login" className="button" style={{ textAlign: 'center', width: '100%', padding: '1rem' }}>START CREATING</a>
+              </div>
            </div>
 
            {/* Tier 2: Producer */}

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function CheckoutButton({ priceId, label, isHighlight = false, styleOverride = {} }: { priceId: string, label: string, isHighlight?: boolean, styleOverride?: any }) {
+export default function CheckoutButton({ priceId, label, isHighlight = false, styleOverride = {}, mode = 'subscription' }: { priceId: string, label: string, isHighlight?: boolean, styleOverride?: any, mode?: 'subscription' | 'payment' }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -13,7 +13,7 @@ export default function CheckoutButton({ priceId, label, isHighlight = false, st
        const res = await fetch('/api/stripe/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ priceId })
+          body: JSON.stringify({ priceId, mode })
        });
        
        const data = await res.json();

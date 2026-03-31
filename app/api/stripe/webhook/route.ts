@@ -21,6 +21,26 @@ export async function POST(req: Request) {
   try {
      if (event.type === 'checkout.session.completed' || event.type === 'invoice.payment_succeeded') {
         const dbObj = event.data.object as any;
+
+        // INTERCEPT: One-Time Token Consumable Fulfillment
+        if (event.type === 'checkout.session.completed' && dbObj.metadata?.purchaseType === 'credits_10') {
+            const customerId = dbObj.customer;
+            const fallbackUserId = dbObj.metadata.userId;
+            
+            if (customerId) {
+                await prisma.user.updateMany({
+                   where: { stripeCustomerId: customerId },
+                   data: { availableCredits: { increment: 10 } }
+                });
+            } else if (fallbackUserId) {
+                await prisma.user.update({
+                   where: { id: fallbackUserId },
+                   data: { availableCredits: { increment: 10 } }
+                });
+            }
+            return NextResponse.json({ received: true, topup: true });
+        }
+
         const customerId = dbObj.customer;
         const subscriptionId = dbObj.subscription;
 
