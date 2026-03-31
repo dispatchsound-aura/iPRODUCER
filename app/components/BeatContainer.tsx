@@ -26,7 +26,7 @@ export default function BeatContainer({ generations, crates }: { generations: an
             {generations.map(gen => <BeatCard key={gen.id} gen={gen} crates={crates} view={view} />)}
          </div>
        ) : (
-         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '750px', margin: '0 auto', width: '100%' }}>
             {generations.map(gen => <BeatCard key={gen.id} gen={gen} crates={crates} view={view} />)}
          </div>
        )}

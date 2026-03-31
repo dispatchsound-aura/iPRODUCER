@@ -125,7 +125,19 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
              <div style={{ width: '8px', height: '8px', background: 'var(--accent-green)', borderRadius: '50%' }}></div>
              <span style={{ fontSize: '0.75rem', color: '#fff', fontWeight: 500 }}>MASTER RENDER</span>
           </div>
-          <audio controls src={gen.id === 'ephemeral' ? beatUrl : `/api/audio/${gen.id}`} style={{ width: '100%', height: '32px', marginBottom: '0.5rem', filter: 'invert(0.9) hue-rotate(180deg) grayscale(1)' }} />
+          <audio 
+            controls 
+            src={gen.id === 'ephemeral' ? beatUrl : `/api/audio/${gen.id}`} 
+            onPlay={(e) => {
+              const elements = document.querySelectorAll('audio');
+              elements.forEach((audio) => {
+                if (audio !== e.target) {
+                  audio.pause();
+                }
+              });
+            }}
+            style={{ width: '100%', height: '32px', marginBottom: '0.5rem', filter: 'invert(0.9) hue-rotate(180deg) grayscale(1)' }} 
+          />
 
           {gen.id === 'ephemeral' ? (
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
