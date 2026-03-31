@@ -75,7 +75,7 @@ export default function Home() {
             textShadow: '0 10px 40px rgba(0,0,0,0.5)', 
             lineHeight: 1.1 
         }}>
-          Design Your Signature Sound.
+          Design Your Sound.
         </h1>
         <p style={{ 
             color: 'var(--text-secondary)', 
@@ -85,7 +85,7 @@ export default function Home() {
             maxWidth: '800px',
             margin: '0 auto 1.5rem auto'
         }}>
-          Instantly manifest industry-grade, royalty-free instrumentals. Extract studio-ready vocal stems and exact MIDI arrangements natively, unlocking infinite creative control in the booth.
+          Instantly manifest industry-grade, royalty-free instrumentals. Extract studio-ready bass, drum, and melody stems alongside exact MIDI arrangements natively, unlocking infinite creative control in your DAW.
         </p>
       </section>
 
@@ -96,8 +96,8 @@ export default function Home() {
         }
       `}</style>
       <section style={{ maxWidth: '800px', width: '100%', marginBottom: '4rem', position: 'relative' }}>
-        <img src="/studio_monitor.png" alt="Left Monitor" className="studio-monitor" style={{ position: 'absolute', left: '-300px', top: '50%', transform: 'translateY(-50%)', width: '380px', opacity: 0.5, zIndex: -1, pointerEvents: 'none' }} />
-        <img src="/studio_monitor.png" alt="Right Monitor" className="studio-monitor" style={{ position: 'absolute', right: '-300px', top: '50%', transform: 'translateY(-50%) scaleX(-1)', width: '380px', opacity: 0.5, zIndex: -1, pointerEvents: 'none' }} />
+        <img src="/studio_monitor.png" alt="Left Monitor" className="studio-monitor" style={{ position: 'absolute', left: '-350px', top: '50%', transform: 'translateY(-50%)', width: '420px', height: 'auto', opacity: 0.25, zIndex: -1, pointerEvents: 'none', mixBlendMode: 'screen' }} />
+        <img src="/studio_monitor.png" alt="Right Monitor" className="studio-monitor" style={{ position: 'absolute', right: '-350px', top: '50%', transform: 'translateY(-50%) scaleX(-1)', width: '420px', height: 'auto', opacity: 0.25, zIndex: -1, pointerEvents: 'none', mixBlendMode: 'screen' }} />
 
         <div className="glass-panel" style={{ width: '100%', padding: 'clamp(1.5rem, 5vw, 3rem)', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vw, 2rem)' }}>
