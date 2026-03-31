@@ -113,9 +113,14 @@ export default function BeatCard({ gen, crates, view = 'grid' }: { gen: any, cra
         )}
 
         {gen.status !== 'ready' && gen.status !== 'failed' && (
-          <button className="button" disabled style={{ width: '100%', marginTop: isList ? '0' : '1rem' }}>
-            Rendering... ({gen.status})
-          </button>
+          <>
+            <button className="button" disabled style={{ width: '100%', marginTop: isList ? '0' : '1rem' }}>
+              Rendering... ({gen.status})
+            </button>
+            <div style={{ textAlign: 'center', marginTop: '0.5rem', color: 'var(--accent-blue)', fontSize: '0.8rem', fontStyle: 'italic', opacity: 0.8 }}>
+              Please allow up to 60 seconds for the beat to completely populate here in your catalog.
+            </div>
+          </>
         )}
       </div>
 
