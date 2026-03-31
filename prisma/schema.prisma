@@ -36,6 +36,7 @@ model Generation {
 model Crate {
   id        String   @id @default(cuid())
   name      String
+  userId    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

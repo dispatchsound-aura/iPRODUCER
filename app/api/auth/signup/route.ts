@@ -38,6 +38,10 @@ export async function POST(req: Request) {
       },
     });
 
+    // INSTANTLY ISSUE A SECURE BROWSER COOKIE!
+    const { setSessionCookie } = await import('../../../../lib/auth');
+    await setSessionCookie(newUser.id);
+
     return NextResponse.json({ success: true, user: newUser }, { status: 201 });
   } catch (err: any) {
     if (err.code === 'P2021' || err.message.includes('Table does not exist')) {

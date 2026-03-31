@@ -2,14 +2,21 @@ import React from 'react';
 import { PrismaClient } from '@prisma/client';
 import BeatContainer from '../components/BeatContainer';
 import CreateCrateButton from '../components/CreateCrateButton';
+import { getSession } from '../../lib/auth';
 
 const prisma = new PrismaClient();
 
 export const dynamic = 'force-dynamic';
 
 export default async function Dashboard({ searchParams }: { searchParams: { crateId?: string, ephemeralTaskId?: string, prompt?: string } }) {
+  const session = await getSession();
+  const userId = session?.userId || 'ghost-user'; // Strictly isolate all Prisma queries
+
   const pendingGenerations = await prisma.generation.findMany({ 
-    where: { NOT: { status: { in: ['ready', 'SUCCESS', 'FAILURE', 'failed'] } } } 
+    where: { 
+      userId, 
+      NOT: { status: { in: ['ready', 'SUCCESS', 'FAILURE', 'failed'] } } 
+    } 
   });
   
   // Sync pending items with Sonauto before rendering
@@ -47,7 +54,10 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
 
   const targetCrateId = searchParams?.crateId;
   const generations = await prisma.generation.findMany({
-    where: targetCrateId ? { crateId: targetCrateId } : undefined,
+    where: {
+      userId,
+      ...(targetCrateId ? { crateId: targetCrateId } : {})
+    },
     orderBy: { createdAt: 'desc' }
   });
 
@@ -69,7 +79,8 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
     } as any);
   }
 
-  const crates = await prisma.crate.findMany({
+  const crates = await (prisma as any).crate.findMany({
+    where: { userId },
     orderBy: { createdAt: 'desc' }
   });
 

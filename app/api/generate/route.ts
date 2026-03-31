@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { getSession } from '../../../lib/auth';
 
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
   try {
-    const { prompt, userId, folderId, bpm } = await req.json();
+    const { prompt, folderId, bpm } = await req.json();
+    const session = await getSession();
+    const userId = session?.userId as string | undefined;
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
