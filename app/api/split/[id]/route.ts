@@ -61,7 +61,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const prediction = await replicate.predictions.create({
       version: "171d8e6a1e4a870b0f17f00c850b3d89d1205848a129d6110a933feaffb2ea6a", // triadmusic/stems-separator
       input: {
-        youtube_url: gen.beatUrl, // The Replicate model accepts pure MP3/WAV urls organically through this param 
+        audio: gen.beatUrl, 
         format: "mp3", 
         model_name: "htdemucs"
       }

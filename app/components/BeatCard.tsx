@@ -61,8 +61,15 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
               setStemStatus('ready');
               setStems(data.stems);
             }
+          } else {
+            setStemStatus('none');
+            setSplitting(false);
+            alert("Stem Extraction Failed (Hardware Timeout). Please try again.");
           }
-        } catch (e) {}
+        } catch (e) {
+           setStemStatus('none');
+           setSplitting(false);
+        }
       }, 5000);
     }
     return () => clearInterval(interval);
