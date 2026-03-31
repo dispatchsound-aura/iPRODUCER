@@ -268,23 +268,6 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
              <div style={{ background: 'var(--control-bg)', padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--border-color)', marginTop: '0.5rem' }}>
                 <h5 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Isolated Elements (Demucs)</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                   {Object.keys(stems).filter(k => k !== 'residuals').map((keyName, idx) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
-                        <a href={stems[keyName]} target="_blank" download={`TYPEBEAT_${gen.id}_${keyName}.mp3`} className="button" style={{ flex: 1, fontSize: '0.7rem', padding: '6px', textAlign: 'center', background: '#30363a', textTransform: 'capitalize' }}>
-                          Download {keyName} mp3
-                        </a>
-                        {(keyName === 'bass' || keyName === 'synthesizer') && role === 'SUPER_PRODUCER' && (
-                           <button 
-                             onClick={() => handleExtractMidi(stems[keyName], keyName)}
-                             disabled={splitting}
-                             className="button highlight" 
-                             style={{ flex: 1, fontSize: '0.7rem', padding: '6px', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white' }}
-                           >
-                             {splitting ? 'Processing MIDI...' : 'Extract MIDI'}
-                           </button>
-                        )}
-                      </div>
-                   ))}
                    
                    <button 
                      onClick={async () => {
@@ -293,7 +276,7 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
                            const zip = new JSZip();
                            const activeStems = Object.keys(stems).filter(k => k !== 'residuals');
                            for (const key of activeStems) {
-                               const res = await fetch(stems[key]);
+                               const res = await fetch('/api/proxy-audio?url=' + encodeURIComponent(stems[key]));
                                const blob = await res.blob();
                                zip.file(`TYPEBEAT_${gen.id}_${key}.mp3`, blob);
                            }
@@ -307,10 +290,31 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
                      }}
                      disabled={splitting}
                      className="button highlight"
-                     style={{ marginTop: '0.5rem', fontSize: '0.8rem', padding: '10px', boxShadow: '0 0 15px rgba(56, 189, 248, 0.3)' }}
+                     style={{ fontSize: '0.8rem', padding: '10px', boxShadow: '0 0 15px rgba(56, 189, 248, 0.3)' }}
                    >
-                     {splitting ? 'Compiling ZIP Archive...' : 'Download All Stems (ZIP)'}
+                     {splitting ? 'Compiling ZIP Archive (This takes a while)...' : 'Download All Stems (ZIP)'}
                    </button>
+                   
+                   {role === 'SUPER_PRODUCER' && stems.bass && stems.synthesizer && (
+                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
+                       <button 
+                           onClick={() => handleExtractMidi('/api/proxy-audio?url=' + encodeURIComponent(stems.bass), 'bass')}
+                           disabled={splitting}
+                           className="button highlight" 
+                           style={{ flex: 1, fontSize: '0.7rem', padding: '6px', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white' }}
+                       >
+                           {splitting ? 'Processing MIDI...' : 'Extract Bass MIDI'}
+                       </button>
+                       <button 
+                           onClick={() => handleExtractMidi('/api/proxy-audio?url=' + encodeURIComponent(stems.synthesizer), 'synth')}
+                           disabled={splitting}
+                           className="button highlight" 
+                           style={{ flex: 1, fontSize: '0.7rem', padding: '6px', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white' }}
+                       >
+                           {splitting ? 'Processing MIDI...' : 'Extract Synth MIDI'}
+                       </button>
+                     </div>
+                   )}
                 </div>
              </div>
           )}

@@ -3,8 +3,9 @@ import './globals.css';
 import { getSession } from '../lib/auth';
 
 export const metadata: Metadata = {
-  title: 'TYPEBEAT Studio pro',
+  title: 'TYPEBEAT',
   description: 'AI Instrumental Generation',
+  appleWebApp: { title: 'TYPEBEAT', statusBarStyle: 'black-translucent' }
 };
 
 export default async function RootLayout({
