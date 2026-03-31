@@ -252,9 +252,14 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
                 </button>
               )}
               {stemStatus === 'splitting' && (
-                <button disabled className="button" style={{ flex: 2, background: 'var(--accent-orange)' }}>
-                  Processing ML Stems... 
-                </button>
+                <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <button disabled className="button" style={{ width: '100%', background: 'var(--accent-orange)' }}>
+                    Processing Neural Stems... 
+                  </button>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--accent-orange)', textAlign: 'center', lineHeight: '1.2' }}>
+                    Process runs securely in the background (15-45s). Stems will auto-save to this catalog card.
+                  </span>
+                </div>
               )}
             </div>
           )}

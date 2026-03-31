@@ -295,8 +295,9 @@ export default function Home() {
           </div>
       </section>
       
-      <div style={{ marginTop: '2rem', marginBottom: '4rem', opacity: 0.4, fontSize: '0.75rem', letterSpacing: '1px', color: 'var(--text-secondary)' }}>
-        POWERED BY SONAUTO & REPLICATE
+      <div style={{ marginTop: '2rem', marginBottom: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', opacity: 0.6, fontSize: '0.8rem', letterSpacing: '1px', color: 'var(--text-secondary)' }}>
+        <a href="mailto:admin@mytypebeat.com" style={{ color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: 600 }}>Support: admin@mytypebeat.com</a>
+        <span style={{ opacity: 0.5, fontSize: '0.7rem' }}>POWERED BY SONAUTO & REPLICATE</span>
       </div>
     </main>
   );

@@ -19,7 +19,7 @@
    Collecting build traces ...
 
 Route (app)                              Size     First Load JS
-┌ ƒ /                                    3.99 kB        91.6 kB
+┌ ƒ /                                    4.07 kB        91.7 kB
 ├ ƒ /_not-found                          873 B          88.5 kB
 ├ ƒ /api/admin/auth                      0 B                0 B
 ├ ƒ /api/admin/credits                   0 B                0 B
@@ -38,7 +38,7 @@ Route (app)                              Size     First Load JS
 ├ ƒ /api/status/[generationId]           0 B                0 B
 ├ ƒ /api/stripe/checkout                 0 B                0 B
 ├ ƒ /api/stripe/webhook                  0 B                0 B
-├ ƒ /dashboard                           41.2 kB         129 kB
+├ ƒ /dashboard                           41.3 kB         129 kB
 ├ ƒ /dashboard/admin                     138 B          87.8 kB
 ├ ○ /icon.jpg                            0 B                0 B
 ├ ƒ /login                               1.89 kB        89.5 kB
