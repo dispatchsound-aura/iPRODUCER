@@ -4,9 +4,9 @@ import Replicate from 'replicate';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request, { params }: { params: { genId: string } }) {
+export async function GET(req: Request, { params }: { params: { generationId: string } }) {
   try {
-    const gen = await prisma.generation.findUnique({ where: { id: params.genId } });
+    const gen = await prisma.generation.findUnique({ where: { id: params.generationId } });
     
     if (!gen || !(gen as any).lalalTaskId) {
       return NextResponse.json({ error: 'Generation Extraction Tasks not found' }, { status: 404 });

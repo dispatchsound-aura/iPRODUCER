@@ -5,7 +5,7 @@ import Replicate from 'replicate';
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: { generationId: string } }) {
   try {
     const session = await getSession();
     const userId = session?.userId as string | undefined;
@@ -42,7 +42,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
        }
     }
 
-    const gen = await prisma.generation.findUnique({ where: { id: params.id } });
+    const gen = await prisma.generation.findUnique({ where: { id: params.generationId } });
     
     if (!gen || gen.userId !== userId || !gen.beatUrl) {
       return NextResponse.json({ error: 'Generation not found or unauthorized' }, { status: 404 });
