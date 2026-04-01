@@ -73,7 +73,7 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
           } else {
             setStemStatus('none');
             setSplitting(false);
-            alert("Stem Extraction Failed (Hardware Timeout). Please try again.");
+            alert("Stem Extraction process was aborted by the Neural ML Server. The audio format may be incompatible or Server resources are overloaded. Please try again later.");
           }
         } catch (e) {
            setStemStatus('none');

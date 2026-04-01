@@ -49,6 +49,13 @@ export async function GET(req: Request, { params }: { params: { genId: string } 
       return NextResponse.json({ status: 'ready', stems });
     } else if (prediction.status === 'failed' || prediction.status === 'canceled') {
        console.error(`Replicate task failed: `, prediction.error);
+       
+       // Update DB so it doesn't get stuck in an infinite alert loop on the frontend
+       await (prisma as any).generation.update({
+         where: { id: gen.id },
+         data: { stemStatus: 'none', lalalTaskId: null }
+       });
+
        return NextResponse.json({ error: 'Replicate Demucs generation failed' }, { status: 500 });
     }
 
