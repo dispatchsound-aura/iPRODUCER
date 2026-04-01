@@ -4,9 +4,9 @@ import { getSession } from '../lib/auth';
 import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
-  title: 'TYPEBEAT',
+  title: 'TYPE BEAT STUDIO',
   description: 'AI Instrumental Generation',
-  appleWebApp: { title: 'TYPEBEAT', statusBarStyle: 'black-translucent' }
+  appleWebApp: { title: 'TYPE BEAT STUDIO', statusBarStyle: 'black-translucent' }
 };
 
 export default async function RootLayout({
@@ -27,7 +27,7 @@ export default async function RootLayout({
               💿
             </div>
             <a href="/" className="header-logo">
-              TYPEBEAT
+              TYPE BEAT STUDIO
               <span className="beta-badge">
                 BETA
               </span>

@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'TYPEBEAT',
-    short_name: 'TYPEBEAT',
+    name: 'TYPE BEAT STUDIO',
+    short_name: 'TYPE BEAT STUDIO',
     description: 'AI Instrumental Generation Suite',
     start_url: '/',
     display: 'standalone',
