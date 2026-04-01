@@ -200,8 +200,7 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
      }
      setSplitting(false);
   };
-
-  const displayTitle = gen.title || gen.prompt?.replace(/(, no lyrics, No Words, Instrumental, no vocals)/ig, '')?.replace(/, strictly generated in the exact musical key of [a-zA-Z\\s]+(?=,|$)/ig, '') || 'Custom Beat Generation';
+  const displayTitle = title || gen.title || 'Untitled Track';
 
   return (
     <div className={`glass-panel ${isList ? 'list-view-card' : ''}`} style={{ display: 'flex', flexDirection: isList ? 'row' : 'column', position: 'relative', gap: isList ? '1rem' : '0' }}>
@@ -268,6 +267,22 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
 
         {gen.status !== 'ready' && gen.status !== 'failed' && (
           <div style={{ marginTop: isList ? '0' : '1rem' }}>
+            <div style={{ marginBottom: '1rem', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+               <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '8px', display: 'block', fontWeight: 600 }}>Name Your Beat While It Cooks</label>
+               <div style={{ display: 'flex', gap: '0.5rem' }}>
+                 <input 
+                   type="text" 
+                   className="input-field" 
+                   placeholder="E.g. Midnight Vibes..." 
+                   value={title} 
+                   onChange={e => setTitle(e.target.value)} 
+                   style={{ flex: 1, padding: '10px 14px', fontSize: '0.9rem' }}
+                 />
+                 {gen.id !== 'ephemeral' && (
+                   <button onClick={handleSaveMeta} className="button" style={{ fontSize: '0.8rem', padding: '0 16px', background: 'var(--accent-orange)', color: '#000', fontWeight: 700 }}>Save</button>
+                 )}
+               </div>
+            </div>
             <div style={{ position: 'relative', width: '100%', height: '40px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
                {/* Progress Fill */}
                <div style={{
