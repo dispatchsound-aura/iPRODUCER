@@ -9,7 +9,7 @@ export default function Home() {
   const [musicalKey, setMusicalKey] = useState<string>('');
   const [recentPrompts, setRecentPrompts] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [globalCount, setGlobalCount] = useState<number | null>(null);
+  const [globalStats, setGlobalStats] = useState<{count: number, producers: number} | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,7 +20,9 @@ export default function Home() {
 
     fetch('/api/stats')
       .then(r => r.json())
-      .then(data => { if (data.success && data.count) setGlobalCount(data.count); })
+      .then(data => { 
+          if (data.success && data.count) setGlobalStats({ count: data.count, producers: data.producers }); 
+      })
       .catch(() => {});
   }, []);
 
@@ -101,9 +103,9 @@ export default function Home() {
           Instantly manifest industry-grade, royalty-free instrumentals. Extract studio-ready bass, drum, and melody stems alongside exact MIDI arrangements natively, unlocking infinite creative control in your DAW.
         </p>
 
-        {globalCount !== null && (
+        {globalStats !== null && (
           <div style={{ marginTop: '1.5rem', display: 'inline-block', padding: '8px 16px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '30px', color: 'var(--accent-blue)', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '1px' }}>
-            TOTAL BEATS GENERATED WORLDWIDE: {globalCount.toLocaleString()}
+            JOIN {globalStats.producers.toLocaleString()}+ PRODUCERS WHO HAVE COOKED {globalStats.count.toLocaleString()} BEATS
           </div>
         )}
       </section>
