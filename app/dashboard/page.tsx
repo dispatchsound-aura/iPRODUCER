@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 export const dynamic = 'force-dynamic';
 
-export default async function Dashboard({ searchParams }: { searchParams: { crateId?: string, ephemeralTaskId?: string, prompt?: string } }) {
+export default async function Dashboard({ searchParams }: { searchParams: { crateId?: string, ephemeralTaskId?: string, prompt?: string, view?: string } }) {
   const session = await getSession();
   const userId = session?.userId || 'ghost-user'; // Strictly isolate all Prisma queries
 
@@ -56,10 +56,12 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
   }
 
   const targetCrateId = searchParams?.crateId;
+  const currentView = searchParams?.view;
   const generations = await prisma.generation.findMany({
     where: {
       userId,
-      ...(targetCrateId ? { crateId: targetCrateId } : {})
+      ...(targetCrateId ? { crateId: targetCrateId } : {}),
+      ...(currentView === 'stems' ? { stemStatus: 'ready' } : {})
     },
     orderBy: { createdAt: 'desc' }
   });
@@ -122,6 +124,15 @@ export default async function Dashboard({ searchParams }: { searchParams: { crat
           </ul>
           
           <CreateCrateButton />
+
+          <h3 style={{ marginBottom: '1rem', color: 'var(--text-secondary)', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', marginTop: '2.5rem' }}>Stem Archive</h3>
+          <ul style={{ listStyle: 'none', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+            <li style={{ padding: '8px 12px', background: currentView === 'stems' ? 'rgba(16, 185, 129, 0.1)' : 'transparent', borderRadius: '8px', borderLeft: currentView === 'stems' ? '3px solid var(--accent-green)' : '3px solid transparent' }}>
+              <a href="/dashboard?view=stems" style={{ color: currentView === 'stems' ? 'white' : 'inherit', fontWeight: currentView === 'stems' ? '600' : '400', fontSize: '0.9rem', display: 'block' }}>
+                Isolated Stems
+              </a>
+            </li>
+          </ul>
         </aside>
 
         <section style={{ padding: 'clamp(1rem, 4vw, 3rem)', overflowY: 'auto' }}>

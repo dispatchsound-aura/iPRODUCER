@@ -9,6 +9,7 @@ export default function Home() {
   const [musicalKey, setMusicalKey] = useState<string>('');
   const [recentPrompts, setRecentPrompts] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [globalCount, setGlobalCount] = useState<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,7 +17,19 @@ export default function Home() {
       const saved = localStorage.getItem('typebeat_recent_prompts');
       if (saved) setRecentPrompts(JSON.parse(saved));
     } catch(e) {}
+
+    fetch('/api/stats')
+      .then(r => r.json())
+      .then(data => { if (data.success && data.count) setGlobalCount(data.count); })
+      .catch(() => {});
   }, []);
+
+  const handleEnhance = () => {
+    if (!prompt.trim()) return;
+    const enhancements = "studio quality, perfectly mixed, punchy heavy industry 808s, crisp modern hi-hats, professional arrangement, mastering chain, radio ready, high fidelity audio";
+    if (prompt.includes("radio ready")) return; // Prevent double enhance
+    setPrompt(`${prompt.trim()}, ${enhancements}`);
+  };
 
   const handleGenerate = async () => {
     if (!prompt) return;
@@ -87,6 +100,12 @@ export default function Home() {
         }}>
           Instantly manifest industry-grade, royalty-free instrumentals. Extract studio-ready bass, drum, and melody stems alongside exact MIDI arrangements natively, unlocking infinite creative control in your DAW.
         </p>
+
+        {globalCount !== null && (
+          <div style={{ marginTop: '1.5rem', display: 'inline-block', padding: '8px 16px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '30px', color: 'var(--accent-blue)', fontSize: '0.9rem', fontWeight: 600, letterSpacing: '1px' }}>
+            JOIN 10,000+ PRODUCERS WHO HAVE COOKED {globalCount.toLocaleString()} BEATS
+          </div>
+        )}
       </section>
 
       {/* 2. CORE GENERATOR SECTION */}
@@ -103,7 +122,17 @@ export default function Home() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1rem, 4vw, 2rem)' }}>
             
             {/* Central Prompt */}
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', position: 'relative' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                 <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Main Sequence</span>
+                 <button 
+                   onClick={handleEnhance}
+                   title="Deploy the Co-Producer AI Agent to instantly rewrite & upgrade your prompt to a studio-ready fidelity tier."
+                   style={{ background: 'linear-gradient(135deg, rgba(244, 114, 182, 0.2), rgba(192, 132, 252, 0.2))', border: '1px solid var(--accent-purple)', padding: '4px 12px', borderRadius: '12px', color: 'white', fontSize: '0.75rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                 >
+                   ✨ AI Co-Producer
+                 </button>
+              </div>
               <textarea 
                 className="input-field" 
                 placeholder="Describe your beat (e.g. A dark trap beat in the style of Metro Boomin with heavy 808s...)"
@@ -295,6 +324,18 @@ export default function Home() {
           </div>
       </section>
       
+      {/* Social Network Links */}
+      <section style={{ padding: '2rem 1rem 0', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+         <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', textAlign: 'center' }}>Connect With Us</h3>
+         <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', maxWidth: '800px' }}>
+            <a href="https://www.facebook.com/mytypebeat1/" target="_blank" rel="noopener noreferrer" className="button" style={{ background: '#1877F2', border: 'none', color: 'white', fontSize: '0.85rem' }}>Facebook</a>
+            <a href="https://www.instagram.com/mytypebeatapp" target="_blank" rel="noopener noreferrer" className="button highlight" style={{ background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)', border: 'none', color: 'white', fontSize: '0.85rem' }}>Instagram</a>
+            <a href="https://www.tiktok.com/@mytypebeat.com" target="_blank" rel="noopener noreferrer" className="button" style={{ background: '#000000', border: '1px solid rgba(255,255,255,0.2)', color: 'white', fontSize: '0.85rem' }}>TikTok</a>
+            <a href="https://www.youtube.com/@TYPEBEATSTUDIOS" target="_blank" rel="noopener noreferrer" className="button highlight" style={{ background: '#FF0000', border: 'none', color: 'white', fontSize: '0.85rem' }}>YouTube</a>
+            <a href="https://x.com/mytypebeat" target="_blank" rel="noopener noreferrer" className="button" style={{ background: '#000000', border: 'none', color: 'white', fontSize: '0.85rem' }}>𝕏 (Twitter)</a>
+         </div>
+      </section>
+
       <div style={{ marginTop: '2rem', marginBottom: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', opacity: 0.6, fontSize: '0.8rem', letterSpacing: '1px', color: 'var(--text-secondary)' }}>
         <a href="mailto:admin@mytypebeat.com" style={{ color: 'var(--accent-blue)', textDecoration: 'none', fontWeight: 600 }}>Support: admin@mytypebeat.com</a>
         <span style={{ opacity: 0.5, fontSize: '0.7rem' }}>POWERED BY SONAUTO & REPLICATE</span>

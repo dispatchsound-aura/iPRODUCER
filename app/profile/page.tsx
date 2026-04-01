@@ -15,6 +15,7 @@ export default async function ProfilePage() {
   }
 
   const userId = session.userId as string;
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { email: true } });
 
   const generations = await prisma.generation.findMany({
     where: { userId },
@@ -56,6 +57,31 @@ export default async function ProfilePage() {
           </div>
         </div>
 
+        {/* Account Details & Stats */}
+        <div className="glass-panel" style={{ padding: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Account Details</h2>
+            <div style={{ marginBottom: '1rem' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Email Address</span>
+              <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1rem' }}>{user?.email || 'N/A'}</p>
+            </div>
+            <div>
+               <a href="/login" className="button" style={{ fontSize: '0.8rem', padding: '8px 16px', background: 'rgba(255,255,255,0.05)' }}>
+                 Change Password
+               </a>
+            </div>
+          </div>
+          <div>
+            <h2 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Studio Statistics</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+               <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                 <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Lifetime Generations</span>
+                 <p style={{ color: 'var(--accent-orange)', fontSize: '2rem', fontWeight: 800, margin: 0, lineHeight: 1 }}>{generations.length}</p>
+               </div>
+            </div>
+          </div>
+        </div>
+
         {/* Saved Prompts History Log */}
         <div className="glass-panel" style={{ padding: '2rem' }}>
           <h2 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>
@@ -86,6 +112,18 @@ export default async function ProfilePage() {
           )}
         </div>
 
+      </div>
+
+      {/* Social Network Links */}
+      <div style={{ marginTop: '4rem', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2rem' }}>
+         <h3 style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem' }}>Connect With Us</h3>
+         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <a href="https://www.facebook.com/mytypebeat1/" target="_blank" rel="noopener noreferrer" className="button" style={{ background: '#1877F2', border: 'none', color: 'white' }}>Facebook</a>
+            <a href="https://www.instagram.com/mytypebeatapp" target="_blank" rel="noopener noreferrer" className="button highlight" style={{ background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)', border: 'none', color: 'white' }}>Instagram</a>
+            <a href="https://www.tiktok.com/@mytypebeat.com" target="_blank" rel="noopener noreferrer" className="button" style={{ background: '#000000', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}>TikTok</a>
+            <a href="https://www.youtube.com/@TYPEBEATSTUDIOS" target="_blank" rel="noopener noreferrer" className="button highlight" style={{ background: '#FF0000', border: 'none', color: 'white' }}>YouTube</a>
+            <a href="https://x.com/mytypebeat" target="_blank" rel="noopener noreferrer" className="button" style={{ background: '#000000', border: 'none', color: 'white' }}>𝕏 (Twitter)</a>
+         </div>
       </div>
     </main>
   );

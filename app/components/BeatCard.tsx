@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import WavePlayer from './WavePlayer';
 
 export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }: { gen: any, crates: any[], view?: 'grid' | 'list', role?: string }) {
   const [stemStatus, setStemStatus] = useState(gen.stemStatus || 'none');
@@ -20,6 +21,14 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
   const [detectingBpm, setDetectingBpm] = useState(false);
   const [status, setStatus] = useState(gen.status);
   const [beatUrl, setBeatUrl] = useState(gen.beatUrl);
+  const [progressWidth, setProgressWidth] = useState('0%');
+
+  useEffect(() => {
+    if (status !== 'ready' && status !== 'failed') {
+      const t = setTimeout(() => setProgressWidth('90%'), 100);
+      return () => clearTimeout(t);
+    }
+  }, [status]);
 
   const isList = view === 'list';
 
@@ -260,14 +269,32 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
         )}
 
         {gen.status !== 'ready' && gen.status !== 'failed' && (
-          <>
-            <button className="button" disabled style={{ width: '100%', marginTop: isList ? '0' : '1rem' }}>
-              Rendering... ({gen.status})
-            </button>
-            <div style={{ textAlign: 'center', marginTop: '0.5rem', color: 'var(--accent-blue)', fontSize: '0.8rem', fontStyle: 'italic', opacity: 0.8 }}>
-              Please allow up to 60 seconds for the beat to completely populate here in your catalog.
+          <div style={{ marginTop: isList ? '0' : '1rem' }}>
+            <div style={{ position: 'relative', width: '100%', height: '40px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+               {/* Progress Fill */}
+               <div style={{
+                  position: 'absolute', top: 0, left: 0, bottom: 0,
+                  width: progressWidth, 
+                  background: 'linear-gradient(90deg, transparent, var(--accent-orange))',
+                  transition: 'width 60s cubic-bezier(0.1, 0.8, 0.2, 1)',
+                  opacity: 0.7
+               }} />
+               {/* Animated Pulse Overlay */}
+               <div style={{
+                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                  animation: 'shimmer 2s infinite', zIndex: 1
+               }} />
+               <style>{`@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }`}</style>
+               {/* Text Layer */}
+               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#fff', zIndex: 2, letterSpacing: '1px', textTransform: 'uppercase', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+                  Rendering AI Composition...
+               </div>
             </div>
-          </>
+            <div style={{ textAlign: 'center', marginTop: '0.6rem', color: 'var(--accent-blue)', fontSize: '0.75rem', fontStyle: 'italic', opacity: 0.8 }}>
+              Analyzing prompts & generating neural audio sequences (Avg. 45-60s)
+            </div>
+          </div>
         )}
       </div>
 
@@ -277,19 +304,8 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
              <div style={{ width: '8px', height: '8px', background: 'var(--accent-green)', borderRadius: '50%' }}></div>
              <span style={{ fontSize: '0.75rem', color: '#fff', fontWeight: 500 }}>MASTER RENDER</span>
           </div>
-          <audio 
-            controls 
-            src={gen.id === 'ephemeral' ? beatUrl : `/api/audio/${gen.id}`} 
-            onPlay={(e) => {
-              const elements = document.querySelectorAll('audio');
-              elements.forEach((audio) => {
-                if (audio !== e.target) {
-                  audio.pause();
-                }
-              });
-            }}
-            style={{ width: '100%', height: '32px', marginBottom: '0.5rem', filter: 'invert(0.9) hue-rotate(180deg) grayscale(1)' }} 
-          />
+
+          <WavePlayer url={gen.id === 'ephemeral' ? beatUrl : `/api/audio/${gen.id}`} />
 
           {gen.id === 'ephemeral' ? (
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>

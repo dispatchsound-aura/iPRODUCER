@@ -59,7 +59,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
     // Step 2: Detonate the MP3 strictly through the Demucs ONNX pipeline
     const prediction = await replicate.predictions.create({
-      version: "25a173108cff36ef9f80f854c162d01df9e6528be175794b8115891fc8a1151d", // cjwbw/demucs
+      version: "25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953", // cjwbw/demucs
       input: {
         audio: gen.beatUrl
       }

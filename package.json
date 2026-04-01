@@ -22,7 +22,8 @@
     "react": "^18",
     "react-dom": "^18",
     "replicate": "^1.4.0",
-    "stripe": "^21.0.1"
+    "stripe": "^21.0.1",
+    "wavesurfer.js": "^7.12.5"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
