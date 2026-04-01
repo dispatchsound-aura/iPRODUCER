@@ -26,11 +26,21 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const handleEnhance = () => {
+  const handleEnhance = async () => {
     if (!prompt.trim()) return;
-    const enhancements = "studio quality, perfectly mixed, punchy heavy industry 808s, crisp modern hi-hats, professional arrangement, mastering chain, radio ready, high fidelity audio";
-    if (prompt.includes("radio ready")) return; // Prevent double enhance
-    setPrompt(`${prompt.trim()}, ${enhancements}`);
+    setLoading(true);
+    try {
+      const res = await fetch('/api/copilot', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+         setPrompt(data.enhanced);
+      }
+    } catch(e) {}
+    setLoading(false);
   };
 
   const handleGenerate = async () => {
