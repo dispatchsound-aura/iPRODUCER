@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { getSession } from '../lib/auth';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'TYPEBEAT',
@@ -58,6 +59,7 @@ export default async function RootLayout({
         <div style={{ marginTop: '70px', minHeight: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column' }}>
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   );
