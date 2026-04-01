@@ -45,10 +45,8 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
             if (data.status === 'SUCCESS' || data.status === 'ready') {
               setStatus('ready');
               if (data.beatUrl) setBeatUrl(data.beatUrl);
-              // Only reload if hitting the permanent database
-              if (gen.id !== 'ephemeral') {
-                 window.location.reload(); 
-              }
+              // Universally auto-refresh the page when beat is done generating so user sees the beat fully loaded
+              window.location.reload(); 
             }
           }
         } catch (e) {}
@@ -276,7 +274,7 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
                   position: 'absolute', top: 0, left: 0, bottom: 0,
                   width: progressWidth, 
                   background: 'linear-gradient(90deg, transparent, var(--accent-orange))',
-                  transition: 'width 60s cubic-bezier(0.1, 0.8, 0.2, 1)',
+                  transition: 'width 70s cubic-bezier(0.1, 0.8, 0.2, 1)',
                   opacity: 0.7
                }} />
                {/* Animated Pulse Overlay */}
@@ -292,7 +290,7 @@ export default function BeatCard({ gen, crates, view = 'grid', role = 'ARTIST' }
                </div>
             </div>
             <div style={{ textAlign: 'center', marginTop: '0.6rem', color: 'var(--accent-blue)', fontSize: '0.75rem', fontStyle: 'italic', opacity: 0.8 }}>
-              Analyzing prompts & generating neural audio sequences (Avg. 45-60s)
+              Analyzing prompts & generating neural audio sequences (Avg. 60-70s)
             </div>
           </div>
         )}
