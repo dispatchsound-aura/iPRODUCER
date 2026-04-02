@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { getSession } from '../lib/auth';
 import { Analytics } from '@vercel/analytics/next';
+import FacebookPopup from './components/FacebookPopup';
 
 export const metadata: Metadata = {
   title: 'TYPE BEAT STUDIO',
@@ -60,6 +61,7 @@ export default async function RootLayout({
           {children}
         </div>
         <Analytics />
+        <FacebookPopup />
       </body>
     </html>
   );
